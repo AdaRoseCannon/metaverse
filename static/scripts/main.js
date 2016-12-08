@@ -14,40 +14,30 @@ const handshakeReg = /HANDSHAKE:(.+)/;
 // 7   misc
 
 
+function sphericalToCartesian(phi, theta, r) {
+	return {
+		x: r * Math.sin(theta) * Math.cos(phi),
+		y: r * Math.sin(theta) * Math.sin(phi),
+		z: r * Math.cos(theta)
+	};
+}
+
 AFRAME.registerSystem('avatar-sync', {
 	init: function () {
 
 		const avatarContainer = document.querySelector('#avatar-container');
+		const self = this;
 
 		const ws = new WebSocket('ws://' + location.host);
-		ws.binaryType = "arraybuffer";
+		ws.binaryType = 'arraybuffer';
 
 		this.webSocket = ws;
 
 		const avatars = new Map();
 
-		function updateState({
-			id,
-			position,
-			rotation,
-			misc
-		} = {}) {
-			if (id) state[0] = id;
-			if (position) state[1] = Math.floor((position.x * SCALE) + MIDDLE);
-			if (position) state[2] = Math.floor((position.y * SCALE) + MIDDLE);
-			if (position) state[3] = Math.floor((position.z * SCALE) + MIDDLE);
-			if (rotation) state[4] = Math.floor((rotation.x * SCALE) + MIDDLE);
-			if (rotation) state[5] = Math.floor((rotation.y * SCALE) + MIDDLE);
-			if (rotation) state[6] = Math.floor((rotation.z * SCALE) + MIDDLE);
-			if (misc) state[7] = misc;
-			ws.send(state);
-		}
-
-		this.updateState = updateState.bind(this);
-
 		ws.addEventListener('message', function m(e) {
 			if (typeof e.data === 'string' && e.data.match(handshakeReg)) {
-				updateState({id: e.data.match(handshakeReg)[1]});
+				self.updateState({id: e.data.match(handshakeReg)[1]});
 				return console.log('Connected');
 			} else {
 
@@ -107,6 +97,36 @@ AFRAME.registerSystem('avatar-sync', {
 				position: this.sceneEl.camera.parent.position
 			});
 		}
+	},
+
+	updateState: function updateState({
+		id,
+		position,
+		rotation,
+		misc
+	} = {}) {
+		if (id) {
+			state[0] = id;
+			const cols = 12;
+			const angle = 12;
+			const row = (id % cols);
+			const pos = sphericalToCartesian(
+				(0 + (id % cols) * angle) / RAD2DEG,
+				0,
+				3 + row
+			);
+			pos.y = row * 1 + 5;
+			console.log(id);
+			this.sceneEl.camera.el.parentNode.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+		}
+		if (position) state[1] = Math.floor((position.x * SCALE) + MIDDLE);
+		if (position) state[2] = Math.floor((position.y * SCALE) + MIDDLE);
+		if (position) state[3] = Math.floor((position.z * SCALE) + MIDDLE);
+		if (rotation) state[4] = Math.floor((rotation.x * SCALE) + MIDDLE);
+		if (rotation) state[5] = Math.floor((rotation.y * SCALE) + MIDDLE);
+		if (rotation) state[6] = Math.floor((rotation.z * SCALE) + MIDDLE);
+		if (misc) state[7] = misc;
+		if (this.webSocket.readyState === 1) this.webSocket.send(state);
 	}
 });
 
