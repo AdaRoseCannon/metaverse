@@ -8,24 +8,36 @@ const MIDDLE = Math.pow(2, 31); //for storing negatives as Uint
 const RAD2DEG = 180 / Math.PI;
 const state = new Uint32Array(length);
 const handshakeReg = /HANDSHAKE:(.+)/;
+const avatarContainer = document.querySelector('#avatar-container');
+
 // 0 id
 // 1-3 position
 // 3-6 rotation
 // 7   misc
 
+function setPosition(el, id) {
 
-function sphericalToCartesian(phi, theta, r) {
+	const cols = 12;
+	const angle = 12;
+	const row = Math.floor(id / cols);
+	const pos = cylindricalToCartesian(
+		(216 + (id % cols) * angle) / RAD2DEG,
+		2 + row * 2,
+		(5 + row)* 2
+	);
+	el.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+}
+
+function cylindricalToCartesian(phi, h, r) {
 	return {
-		x: r * Math.sin(theta) * Math.cos(phi),
-		y: r * Math.sin(theta) * Math.sin(phi),
-		z: r * Math.cos(theta)
+		x: r * Math.cos(phi),
+		y: h,
+		z: r * Math.sin(phi)
 	};
 }
 
 AFRAME.registerSystem('avatar-sync', {
 	init: function () {
-
-		const avatarContainer = document.querySelector('#avatar-container');
 		const self = this;
 
 		const ws = new WebSocket('ws://' + location.host);
@@ -59,7 +71,7 @@ AFRAME.registerSystem('avatar-sync', {
 					let avatar;
 
 					if (!avatars.has(id)) {
-						avatar = document.createRange().createContextualFragment(AVATAR).firstElementChild;
+						avatar = makeAvatarEl();
 						console.log('Creating new Avatar', id);
 						avatars.set(id, avatar);
 						avatar.setAttribute('position', `${posX} ${posY} ${posZ}`);
@@ -107,17 +119,8 @@ AFRAME.registerSystem('avatar-sync', {
 	} = {}) {
 		if (id) {
 			state[0] = id;
-			const cols = 12;
-			const angle = 12;
-			const row = (id % cols);
-			const pos = sphericalToCartesian(
-				(0 + (id % cols) * angle) / RAD2DEG,
-				0,
-				3 + row
-			);
-			pos.y = row * 1 + 5;
 			console.log(id);
-			this.sceneEl.camera.el.parentNode.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+			// setPosition(this.sceneEl.querySelector('a-camera').parentNode, id);
 		}
 		if (position) state[1] = Math.floor((position.x * SCALE) + MIDDLE);
 		if (position) state[2] = Math.floor((position.y * SCALE) + MIDDLE);
@@ -130,22 +133,30 @@ AFRAME.registerSystem('avatar-sync', {
 	}
 });
 
-const AVATAR = `
-<a-entity position="0 1.6 -5" rotation="0 180 0">
-	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
-	<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
-	<a-box material="color: aquamarine;" scale="" class="avatar-body recolor" ></a-box>
-	<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;" ></a-entity>
-	<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>
-	<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">
-		<a-box material="color: aquamarine;" class="avatar-mouth recolor" position="0 0 -0.5" scale="1 0.2 1" >
-			<a-box material="color: pink;" position="0 0.6 0" scale="0.8 0.2 0.8" ></a-box>
-		</a-box>
-		<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>
-	</a-entity>
-	<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom recolor" material="color: aquamarine;">
-		<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>
-		<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>
-	</a-sphere>
-</a-entity>`;
+function makeAvatarEl() {
+	const AVATAR = `
+	<a-entity position="0 1.6 -5" rotation="0 180 0">
+		<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
+		<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
+		<a-box material="color: aquamarine;" scale="" class="avatar-body recolor" ></a-box>
+		<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;" ></a-entity>
+		<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>
+		<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">
+			<a-box material="color: aquamarine;" class="avatar-mouth recolor" position="0 0 -0.5" scale="1 0.2 1" >
+				<a-box material="color: pink;" position="0 0.6 0" scale="0.8 0.2 0.8" ></a-box>
+			</a-box>
+			<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>
+		</a-entity>
+		<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom recolor" material="color: aquamarine;">
+			<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>
+			<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>
+		</a-sphere>
+	</a-entity>`;
+	return document.createRange().createContextualFragment(AVATAR).firstElementChild;
+}
 
+for (let id = 0; id < 20; id++) {
+	const avatar = makeAvatarEl();
+	setPosition(avatar, id);
+	avatarContainer.appendChild(avatar);
+}
