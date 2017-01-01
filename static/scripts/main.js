@@ -21,7 +21,7 @@ function setPosition(el, id) {
 	const angle = 12;
 	const row = Math.floor(id / cols);
 	const pos = cylindricalToCartesian(
-		(216 + (id % cols) * angle) / RAD2DEG,
+		(216 + (id % cols) * angle * Math.pow(0.9, row - 1)) / RAD2DEG,
 		2 + row * 2,
 		(5 + row)* 2
 	);
@@ -49,7 +49,7 @@ AFRAME.registerSystem('avatar-sync', {
 
 		ws.addEventListener('message', function m(e) {
 			if (typeof e.data === 'string' && e.data.match(handshakeReg)) {
-				self.updateState({id: e.data.match(handshakeReg)[1]});
+				self.updateState({id: Number(e.data.match(handshakeReg)[1])});
 				return console.log('Connected');
 			} else {
 
@@ -120,7 +120,7 @@ AFRAME.registerSystem('avatar-sync', {
 		if (id) {
 			state[0] = id;
 			console.log(id);
-			// setPosition(this.sceneEl.querySelector('a-camera').parentNode, id);
+			setPosition(this.sceneEl.querySelector('a-camera').parentNode, id);
 		}
 		if (position) state[1] = Math.floor((position.x * SCALE) + MIDDLE);
 		if (position) state[2] = Math.floor((position.y * SCALE) + MIDDLE);
@@ -133,30 +133,31 @@ AFRAME.registerSystem('avatar-sync', {
 	}
 });
 
-function makeAvatarEl() {
-	const AVATAR = `
-	<a-entity position="0 1.6 -5" rotation="0 180 0">
-		<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
-		<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
-		<a-box material="color: aquamarine;" scale="" class="avatar-body recolor" ></a-box>
-		<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;" ></a-entity>
-		<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>
-		<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">
-			<a-box material="color: aquamarine;" class="avatar-mouth recolor" position="0 0 -0.5" scale="1 0.2 1" >
-				<a-box material="color: pink;" position="0 0.6 0" scale="0.8 0.2 0.8" ></a-box>
-			</a-box>
-			<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>
-		</a-entity>
-		<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom recolor" material="color: aquamarine;">
-			<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>
-			<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>
-		</a-sphere>
-	</a-entity>`;
-	return document.createRange().createContextualFragment(AVATAR).firstElementChild;
+const avatarGen = color => `
+<a-entity position="0 1.6 -5" rotation="0 180 0">
+	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
+	<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
+	<a-box material="color: ${color};" scale="" class="avatar-body recolor" ></a-box>
+	<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;" ></a-entity>
+	<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>
+	<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">
+		<a-box material="color: ${color};" class="avatar-mouth recolor" position="0 0 -0.5" scale="1 0.2 1" >
+			<a-box material="color: pink;" position="0 0.6 0" scale="0.8 0.2 0.8" ></a-box>
+		</a-box>
+		<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>
+	</a-entity>
+	<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom recolor" material="color: ${color};">
+		<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>
+		<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>
+	</a-sphere>
+</a-entity>`;
+
+function makeAvatarEl(id) {
+	return document.createRange().createContextualFragment(avatarGen('hsl(' + (id * 137.5) % 360 + ',80%,60%)')).firstElementChild;
 }
 
-for (let id = 0; id < 20; id++) {
-	const avatar = makeAvatarEl();
+for (let id = 0; id < 100; id++) {
+	const avatar = makeAvatarEl(id);
 	setPosition(avatar, id);
 	avatarContainer.appendChild(avatar);
 }
