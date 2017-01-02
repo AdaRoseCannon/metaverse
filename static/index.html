@@ -1,21 +1,28 @@
 <html>
 <html>
 	<script src="scripts/aframe.js"></script>
+	<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
 </html>
 <body>
 	<a-scene avatar-sync fog="type: exponential;">
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
 			<img id="grid" src="images/grid.png"></img>
-   			<a-asset-item id="theatre" src="models/theatre.obj"></a-asset-item>
+   			<a-asset-item id="theatre" src="/models/theatre.obj"></a-asset-item>
+      		<a-asset-item id="samsung" src="/fonts/SamsungOne_Regular.json"></a-asset-item>
 		</a-assets>
 		<a-entity id="avatar-container"></a-entity>
 
-		<a-entity position="0 1.6 3">
+		<a-entity position="0 1.6 3" rotation="0 180 0">
 			<a-camera user-height="0"></a-camera>
 		</a-entity>
 
-		<a-entity id="dynamic-content">
+
+		<a-entity id="stage" position="0 -0.1 0">
+			<a-entity geometry="primitive: circle; radius: 4;" material="color: firebrick; metalness: 0; roughness: 0.8;" rotation="-90 0 0"></a-entity>
+			<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="0 8 5" rotation="0 180 0" scale="2 2 2"></a-entity>
+			<a-entity id="dynamic-content">
+			</a-entity>
 		</a-entity>
 
 		<a-entity

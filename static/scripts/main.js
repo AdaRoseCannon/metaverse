@@ -156,8 +156,8 @@ function makeAvatarEl(id) {
 	return document.createRange().createContextualFragment(avatarGen('hsl(' + (id * 137.5) % 360 + ',80%,60%)')).firstElementChild;
 }
 
-for (let id = 0; id < 100; id++) {
-	const avatar = makeAvatarEl(id);
-	setPosition(avatar, id);
-	avatarContainer.appendChild(avatar);
-}
+// for (let id = 0; id < 100; id++) {
+// 	const avatar = makeAvatarEl(id);
+// 	setPosition(avatar, id);
+// 	avatarContainer.appendChild(avatar);
+// }
