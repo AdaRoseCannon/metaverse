@@ -9,10 +9,16 @@
     "utf-8-validate": "^1.2.1",
     "ws": "^1.1.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-env": "^1.1.4",
+    "nodemon": "^1.11.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ."
+    "build": "./node_modules/.bin/babel ./static/scripts/main.es6.js -o ./static/scripts/main.js",
+    "start": "npm run build; node .",
+    "watch": "nodemon --verbose -i static/scripts/main.js -x 'npm run start'"
   },
   "author": "",
   "license": "ISC"
