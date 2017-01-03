@@ -10,6 +10,7 @@
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
 			<img id="pink" src="images/pink.jpg"></img>
+			<img id="shadow" src="images/shadow.png"></img>
 			<img id="grid" src="images/congruent_outline.png"></img>
 			<a-asset-item id="theatre" src="/models/theatre.obj"></a-asset-item>
 			<a-asset-item id="crown" src="/models/crown.obj"></a-asset-item>
@@ -17,9 +18,11 @@
 			<a-asset-item id="dawning" src="/fonts/dawning_of_a_new_day.json"></a-asset-item>
 		</a-assets>
 		<a-sky src="#sky" rotation="0 90 0" material="fog: false; depthTest: false;"></a-sky>
-		<a-entity id="floor" position="0 0 0" static-body geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0" position="0 -0.2 0"
+		<a-entity id="floor" position="0 -0.2 0" static-body geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0" position="0 -0.2 0"
 						material="src: #grid; repeat: 4000 4000; metalness:0.0; roughness: 1;"></a-entity>
-		<a-entity id="mat" geometry="primitive: circle; radius: 7;" material="color: firebrick; metalness: 0; roughness: 0.8; depthTest: false;" rotation="-90 0 0"></a-entity>
+		<a-entity id="mat" position="0 -0.2 0" geometry="primitive: circle; radius: 7;" material="color: firebrick; metalness: 0; roughness: 0.8; depthTest: false;" rotation="-90 0 0"></a-entity>
+
+		<a-entity id="avatar-container"></a-entity>
 
 		<a-entity>
 			<a-camera user-height="0"></a-camera>
@@ -35,7 +38,6 @@
 			</a-entity>
 		</a-entity>
 
-		<a-entity id="avatar-container"></a-entity>
 
 		<a-entity material="color: grey; metalness: 0; roughness: 1; side: double;" obj-model="obj: #theatre;" position="0 -1.5 0" rotation="0 160 0"
 						scale="2 2 2"></a-entity>

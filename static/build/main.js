@@ -98,7 +98,8 @@ AFRAME.registerSystem('avatar-sync', {
 						console.log('Creating new Avatar', id);
 						avatars.set(id, avatar);
 						avatar.setAttribute('position', posX + ' ' + posY + ' ' + posZ);
-						avatar.setAttribute('rotation', rotX * RAD2DEG + ' ' + rotY * RAD2DEG + ' ' + rotZ * RAD2DEG);
+						avatar.setAttribute('rotation', '0 ' + rotY * RAD2DEG + ' 0');
+						avatar.firstChild.setAttribute('rotation', rotX * RAD2DEG + ' 0 ' + rotZ * RAD2DEG);
 						avatarContainer.appendChild(avatar);
 					} else {
 						// update existing avatar
@@ -117,6 +118,7 @@ AFRAME.registerSystem('avatar-sync', {
 						if (getMiscState(misc, 'speaker')) {
 							addCrown(avatar);
 							avatar.setAttribute('scale', '1.5 1.5 1.5');
+							avatar.querySelector('.shadow').setAttribute('scale', '1.5 1.5 1.5');
 						}
 						avatar.dataset.misc = misc;
 					}
@@ -181,7 +183,7 @@ AFRAME.registerSystem('avatar-sync', {
 });
 
 var avatarGen = function avatarGen(color) {
-	return '\n<a-entity><a-entity>\n\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t<a-box material="color: ' + color + ';" scale="" class="avatar-body"></a-box>\n\t<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">\n\t\t<a-box material="color: ' + color + ';" class="avatar-mouth" position="0 0 -0.5" scale="1 0.2 1">\n\t\t\t<a-box material="color: red;" position="0 0.6 0" scale="0.8 0.2 0.8"></a-box>\n\t\t</a-box>\n\t\t<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>\n\t</a-entity>\n\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t</a-sphere>\n\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t</a-sphere>\n</a-entity></a-entity>';
+	return '\n<a-entity><a-entity>\n\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t<a-box material="color: ' + color + ';" scale="" class="avatar-body"></a-box>\n\t<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">\n\t\t<a-box material="color: ' + color + ';" class="avatar-mouth" position="0 0 -0.5" scale="1 0.2 1">\n\t\t\t<a-box material="color: red;" position="0 0.6 0" scale="0.8 0.2 0.8"></a-box>\n\t\t</a-box>\n\t\t<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>\n\t</a-entity>\n\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t</a-sphere>\n\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t</a-sphere>\n</a-entity>\n<a-entity geometry="primitive: plane;" class="shadow" place-on-ground rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>\n</a-entity>';
 };
 
 function makeAvatarEl(id) {
@@ -197,3 +199,10 @@ function addCrown(el) {
 // 	setPosition(avatar, id);
 // 	avatarContainer.appendChild(avatar);
 // }
+
+AFRAME.registerComponent('place-on-ground', {
+	schema: {},
+	tick: function tick() {
+		this.el.object3D.position.y -= this.el.object3D.getWorldPosition().y;
+	}
+});
