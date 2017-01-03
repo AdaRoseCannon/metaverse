@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
 <html>
 	<script src="scripts/aframe.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
@@ -7,19 +7,21 @@
 	<a-scene avatar-sync fog="type: exponential;">
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
-			<img id="grid" src="images/grid.png"></img>
+			<img id="grid" src="images/congruent_outline.png"></img>
    			<a-asset-item id="theatre" src="/models/theatre.obj"></a-asset-item>
+   			<a-asset-item id="crown" src="/models/crown.obj"></a-asset-item>
       		<a-asset-item id="samsung" src="/fonts/SamsungOne_Regular.json"></a-asset-item>
 		</a-assets>
+
 		<a-entity id="avatar-container"></a-entity>
 
 		<a-entity>
 			<a-camera user-height="0"></a-camera>
 		</a-entity>
 
-		<a-entity id="stage" position="0 -0.1 0">
-			<a-entity geometry="primitive: circle; radius: 4;" material="color: firebrick; metalness: 0; roughness: 0.8;" rotation="-90 0 0"></a-entity>
-			<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="0 8 5" rotation="0 180 0" scale="2 2 2"></a-entity>
+		<a-entity id="stage" position="0 0.1 0">
+			<a-entity geometry="primitive: circle; radius: 7;" material="color: firebrick; metalness: 0; roughness: 0.8;" rotation="-90 0 0"></a-entity>
+			<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
 			<a-entity id="dynamic-content">
 			</a-entity>
 		</a-entity>
@@ -27,22 +29,26 @@
 		<a-entity
 			material="color: grey; metalness: 0; roughness: 1;"
 			obj-model="obj: #theatre;"
-			position="0 5 0"
+			position="0 -1.5 0"
 			rotation="0 160 0"
 			scale="2 2 2"
 		></a-entity>
 
 		<a-entity position="0 0 0"
 				  static-body
-				  geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0"
-				  material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;"></a-entity>
+				  geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0" position="0 -0.2 0"
+				  material="src: #grid; repeat: 4000 4000; metalness:0.0; roughness: 1;"></a-entity>
 
-		<a-entity light="color: #ffffff; intensity: 0.2; type: ambient;" visible=""></a-entity>
-		<a-entity light="color: #ffaaff; intensity: 1.2" position="5 5 5"></a-entity>
-		<a-entity light="color: #aaffaa; intensity: 0.7" position="-5 5 15"></a-entity>
+		<!--<a-entity light="color: #ffffff; intensity: 0.2; type: ambient;" visible=""></a-entity>-->
+		<a-entity light="color: #ffaaff; intensity: 1.5" position="15 5 5"></a-entity>
+		<a-entity light="color: #aaffaa; intensity: 0.7" position="-15 5 15"></a-entity>
+		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:4.48;penumbra:0.04;type:spot;target:null" position="0 15 -8">
+			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
+		</a-entity>
 
-		<a-sky src="#sky" rotation="0 -90 0"></a-sky>
+		<a-sky src="#sky" rotation="0 90 0"></a-sky>
 	</a-scene>
 	<script src="build/main.js"></script>
+	<script src="scripts/slides.js"></script>
 </body>
 </html>
