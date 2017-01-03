@@ -71,7 +71,7 @@ AFRAME.registerSystem('avatar-sync', {
 					let avatar;
 
 					if (!avatars.has(id)) {
-						avatar = makeAvatarEl();
+						avatar = makeAvatarEl(id);
 						console.log('Creating new Avatar', id);
 						avatars.set(id, avatar);
 						avatar.setAttribute('position', `${posX} ${posY} ${posZ}`);
@@ -120,7 +120,8 @@ AFRAME.registerSystem('avatar-sync', {
 		if (id) {
 			state[0] = id;
 			console.log(id);
-			setPosition(this.sceneEl.querySelector('a-camera').parentNode, id);
+			setPosition(this.sceneEl.querySelector('a-camera'), id);
+			this.sceneEl.querySelector('a-camera').setAttribute('rotation', '0 180 0');
 		}
 		if (position) state[1] = Math.floor((position.x * SCALE) + MIDDLE);
 		if (position) state[2] = Math.floor((position.y * SCALE) + MIDDLE);
@@ -134,7 +135,7 @@ AFRAME.registerSystem('avatar-sync', {
 });
 
 const avatarGen = color => `
-<a-entity position="0 1.6 -5" rotation="0 180 0">
+<a-entity>
 	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 	<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
 	<a-box material="color: ${color};" scale="" class="avatar-body recolor" ></a-box>
