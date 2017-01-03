@@ -40,7 +40,7 @@ AFRAME.registerSystem('avatar-sync', {
 	init: function () {
 		const self = this;
 
-		const ws = new WebSocket('ws://' + location.host);
+		const ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
 		ws.binaryType = 'arraybuffer';
 
 		this.webSocket = ws;

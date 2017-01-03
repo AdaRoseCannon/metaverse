@@ -2,7 +2,6 @@
 'use strict';
 
 const server = require('http').createServer();
-const url = require('url');
 const WebSocketServer = require('ws').Server;
 const wss = new WebSocketServer({ server: server });
 const express = require('express');
