@@ -135,7 +135,7 @@ AFRAME.registerSystem('avatar-sync', {
 
 				tickOff.forEach(function (id) {
 					const a = avatars.get(id);
-					a.emit('remove');
+					a.firstChild.emit('remove');
 					avatars.delete(id);
 					setTimeout(function () {
 						avatarContainer.removeChild(a);
@@ -199,7 +199,7 @@ const avatarGen = color => `
 	<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>
 	<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">
 		<a-box material="color: ${color};" class="avatar-mouth" position="0 0 -0.5" scale="1 0.2 1">
-			<a-box material="color: red;" position="0 0.6 0" scale="0.8 0.2 0.8"></a-box>
+			<a-box material="color: pink; roughness: 1; metalness: 0;" position="0 0.6 0" scale="0.8 0.2 0.8"></a-box>
 		</a-box>
 		<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>
 	</a-entity>
