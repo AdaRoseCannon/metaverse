@@ -170,7 +170,7 @@ AFRAME.registerSystem('avatar-sync', {
 			}
 
 			if (mode === 'speaker') {
-				this.sceneEl.querySelector('a-camera').setAttribute('position', '0 2.2 0');
+				this.sceneEl.querySelector('a-camera').setAttribute('position', '3 2.2 0');
 				this.setMiscState('speaker', true);
 			}
 		}
