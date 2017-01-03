@@ -102,6 +102,8 @@ AFRAME.registerSystem('avatar-sync', {
 						avatar = makeAvatarEl(id);
 						console.log('Creating new Avatar', id);
 						avatars.set(id, avatar);
+
+						// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
 						avatar.setAttribute('position', `${posX} ${posY} ${posZ}`);
 						avatar.setAttribute('rotation', `0 ${rotY * RAD2DEG} 0`);
 						avatar.firstChild.setAttribute('rotation', `${rotX * RAD2DEG} 0 ${rotZ * RAD2DEG}`);
@@ -110,9 +112,11 @@ AFRAME.registerSystem('avatar-sync', {
 						// update existing avatar
 						avatar = avatars.get(id);
 						if (avatar.object3D) {
-							avatar.object3D.rotation.x = rotX;
+
+							// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
+							avatar.firstChild.object3D.rotation.x = rotX;
 							avatar.object3D.rotation.y = rotY;
-							avatar.object3D.rotation.z = rotZ;
+							avatar.firstChild.object3D.rotation.z = rotZ;
 							avatar.object3D.position.x = posX;
 							avatar.object3D.position.y = posY;
 							avatar.object3D.position.z = posZ;
