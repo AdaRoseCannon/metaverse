@@ -10,6 +10,7 @@ const state = new Uint32Array(length);
 const handshakeReg = /HANDSHAKE:(.+)/;
 const avatarContainer = document.querySelector('#avatar-container');
 
+// Socket data format
 // 0 id
 // 1-3 position
 // 3-6 rotation
