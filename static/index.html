@@ -3,6 +3,7 @@
 <head>
 	<script src="scripts/aframe.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
+	<script src="https://rawgit.com/bryik/aframe-bmfont-text-component/master/dist/aframe-bmfont-text-component.min.js"></script>
 </head>
 <body>
 	<script>
@@ -21,6 +22,8 @@
 			<a-asset-item id="crown" src="/models/crown.obj"></a-asset-item>
 			<a-asset-item id="samsung" src="/fonts/SamsungOne_Regular.json"></a-asset-item>
 			<a-asset-item id="dawning" src="/fonts/dawning_of_a_new_day.json"></a-asset-item>
+			<a-asset-item id="fnt" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.fnt"></a-asset-item>
+			<img id="fntImage" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.png" />
 		</a-assets>
 		<a-sky src="#sky" rotation="0 90 0" material="fog: false; depthTest: false;"></a-sky>
 		<a-entity id="floor" position="0 -0.2 0" static-body geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0" position="0 -0.2 0"
@@ -45,7 +48,7 @@
 				<a-entity text="text: WebPerf; font: #dawning; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
 								material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" position="2.6 0 0"></a-entity>
 			</a-entity>
-			<a-entity id="dynamic-content">
+			<a-entity id="dynamic-content" rotation="0 180 0">
 			</a-entity>
 		</a-entity>
 
