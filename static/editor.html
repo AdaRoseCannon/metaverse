@@ -57,9 +57,11 @@
 </a-entity>
 <a-box></a-box>
 			</script>
-			<script id="second-slide" type="text/html">
-<a-box></a-box>
-<a-box position="0 3 0"></a-box>
+			<script id="bunny" type="text/html">
+<a-entity obj-model="obj: url(/models/bunny.obj);" scale="100 100 100" position="-10 -4 -10">
+	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="100 100 100" dur="6600" easing="ease-out-elastic"></a-animation>
+	<a-animation attribute="rotation" from="0 0 0" to="0 360 0" dur="44000" easing="linear" repeat="indefinite"></a-animation>
+</a-entity>
 			</script>
 		</select>
 	</div>
