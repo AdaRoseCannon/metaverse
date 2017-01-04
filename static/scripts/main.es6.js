@@ -57,12 +57,18 @@ function cylindricalToCartesian(phi, h, r) {
 }
 
 AFRAME.registerSystem('avatar-sync', {
+	schema: {
+		enabled: {
+			default: false
+		}
+	},
 	init: function () {
+		if (!this.data.enabled) return;
+
 		const self = this;
 
 		const ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
 		ws.binaryType = 'arraybuffer';
-
 		this.webSocket = ws;
 
 		const avatars = new Map();
@@ -146,6 +152,7 @@ AFRAME.registerSystem('avatar-sync', {
 	},
 
 	tick: function () {
+		if (!this.data.enabled) return;
 		if (this.sceneEl.camera) {
 			this.updateState({
 				rotation: this.sceneEl.camera.parent.rotation,

@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
-<script src="scripts/aframe.js"></script>
-<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
-
-</html>
-
+<head>
+	<script src="scripts/aframe.js"></script>
+	<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
+</head>
 <body>
-	<a-scene avatar-sync fog="color: #0e1734; density: 0.02; type: exponential">
+	<script>
+		if (location.search === '?watcher') {
+			document.write('<a-scene fog="color: #0e1734; density: 0.02; type: exponential">');
+		} else {
+			document.write('<a-scene avatar-sync="enabled: true;" fog="color: #0e1734; density: 0.02; type: exponential">')
+		}
+	</script>
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
 			<img id="pink" src="images/pink.jpg"></img>
@@ -24,9 +29,15 @@
 
 		<a-entity id="avatar-container"></a-entity>
 
-		<a-entity>
-			<a-camera user-height="0"></a-camera>
-		</a-entity>
+		<script>
+			if (location.search === '?watcher') {
+				console.log('Watching');
+				document.write('<a-entity position="0 3.2 -8" rotation="0 180 0"><a-camera user-height="0"></a-camera></a-entity>');
+			} else {
+				document.write('<a-entity><a-camera user-height="0"></a-camera></a-entity>')
+			}
+		</script>
+
 		<a-entity id="stage">
 			<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
 			<a-entity position="2 8.85 2.57" scale="1.2 1.2 1.2" rotation="0 180 -9">
@@ -52,5 +63,4 @@
 	<script src="build/main.js"></script>
 	<script src="scripts/slides.js"></script>
 </body>
-
 </html>

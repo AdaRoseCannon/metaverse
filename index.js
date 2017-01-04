@@ -23,7 +23,20 @@ wss.on('connection', function connection(ws) {
 	ws.id = id;
 
 	ws.on('message', function incoming(message) {
-		ws.buffer = message;
+
+		// Rebroadcast any string messages
+		if (typeof message === 'string') {
+			wss.clients.forEach(function (ws) {
+				ws.send(message, function (e) {
+					if (e) {
+						console.log(e.message);
+						console.log('Oh no! ' + Date.now());
+					}
+				});
+			});
+		} else {
+			ws.buffer = message;
+		}
 	});
 
 	ws.send('HANDSHAKE:' + id);

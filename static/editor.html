@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/lib/codemirror.css">
+	<link rel="stylesheet" href="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/addon/hint/show-hint.css">
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/lib/codemirror.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/addon/hint/show-hint.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/addon/hint/xml-hint.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/addon/hint/html-hint.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/mode/xml/xml.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/mode/javascript/javascript.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/mode/css/css.js"></script>
+	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/mode/htmlmixed/htmlmixed.js"></script>
+	<style>
+		html {
+			height: 100%;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+		}
+
+		iframe {
+			float: left;
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			border: none;
+			display: inline-block;
+			flex-grow: 1;
+		}
+
+		body,
+		html {
+			margin: 0;
+			width: 100%;
+			min-height: 100%;
+			padding: 0;
+		}
+
+		#tools {
+			display: flex;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="tools">
+		<button id='submit'>Submit</button>
+		<select id="snippets">
+			<script id="hello-world" type="text/html">
+<a-box></a-box>
+			</script>
+			<script id="second-slide" type="text/html">
+<a-box></a-box>
+<a-box position="0 3 0"></a-box>
+			</script>
+		</select>
+	</div>
+	<div id="code"></div>
+	<iframe src="/?watcher"></iframe>
+	<script src="scripts/slides.js"></script>
+</body>
+
+</html>
