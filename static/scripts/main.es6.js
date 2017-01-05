@@ -41,8 +41,8 @@ function setPosition(el, id) {
 	const angle = 12;
 	const row = Math.floor(id / cols);
 	const pos = cylindricalToCartesian(
-		(215 + (id % cols) * angle) / RAD2DEG,
-		2 + row * 2,
+		(220 + (id % cols) * angle) / RAD2DEG,
+		2.6 + row * 2,
 		(5 + row)* 2
 	);
 	el.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);

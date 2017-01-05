@@ -6,8 +6,6 @@
 var ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
 ws.binaryType = 'arraybuffer';
 
-var slideReg = /SLIDE:([\s\S]+)/;
-var slideUpdateReg = /SLIDE:(.+)<=([\s\S]+)/;
 var contentHole = document.getElementById('dynamic-content');
 
 ws.addEventListener('message', function m(e) {
@@ -15,14 +13,25 @@ ws.addEventListener('message', function m(e) {
 
 	var data;
 
-	data = e.data.match(slideReg);
+	data = e.data.match(/SLIDE:([\s\S]+)/);
 	if (data) {
 		if (contentHole) contentHole.innerHTML = data[1];
+		return;
 	};
 
-	data = e.data.match(slideUpdateReg);
+	data = e.data.match(/SLIDE:(.+)<=([\s\S]+)/);
 	if (data) {
 		if (contentHole) contentHole.querySelector(data[1]).innerHTML = data[2];
+		return;
+	};
+
+	data = e.data.match(/APPEND:([\s\S]+)/);
+	if (data) {
+		if (contentHole) {
+			const result = document.createRange().createContextualFragment(data[1]);
+			while (result.firstElementChild) contentHole.appendChild(result.firstElementChild);
+		}
+		return;
 	};
 });
 
@@ -47,6 +56,10 @@ if (document.getElementById('code')) (function () {
 		ws.send('SLIDE:' + editor.getValue());
 	}
 
+	function append() {
+		ws.send('APPEND:' + editor.getValue());
+	}
+
 	const select = document.querySelector('#snippets');
 	const snips = select.querySelectorAll('script');
 	const datums = {};
@@ -65,5 +78,9 @@ if (document.getElementById('code')) (function () {
 
 	document.getElementById('submit').addEventListener('click', function () {
 		submit();
+	});
+
+	document.getElementById('append').addEventListener('click', function () {
+		append();
 	});
 } ());

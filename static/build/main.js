@@ -39,7 +39,7 @@ function setPosition(el, id) {
 	var cols = 12;
 	var angle = 12;
 	var row = Math.floor(id / cols);
-	var pos = cylindricalToCartesian((215 + id % cols * angle) / RAD2DEG, 2 + row * 2, (5 + row) * 2);
+	var pos = cylindricalToCartesian((220 + id % cols * angle) / RAD2DEG, 2.6 + row * 2, (5 + row) * 2);
 	el.setAttribute('position', pos.x + ' ' + pos.y + ' ' + pos.z);
 }
 

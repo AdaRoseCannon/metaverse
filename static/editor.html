@@ -48,21 +48,35 @@
 
 <body>
 	<div id="tools">
-		<button id='submit'>Submit</button>
-		<select id="snippets">
-			<script id="hello-world" type="text/html">
+		<button id='submit'>Replace</button>
+		<button id='append'>Append</button>
+		<select id="snippets" style="flex-grow: 1;">
+
+<script id="hello-world" type="text/html">
 <a-entity position="-3 2.5 -1.5" scale="4 4 4">
 	<a-entity bmfont-text="text: <a-box></a-box>; width: 650;"></a-entity>
 	<a-entity geometry="primitive: plane; width: 2; height: 0.3;" position="0.9 0 -0.1" material="color: white; shader: flat;"></a-entity>
 </a-entity>
 <a-box></a-box>
-			</script>
-			<script id="bunny" type="text/html">
+</script>
+
+
+<script id="bunny" type="text/html">
 <a-entity obj-model="obj: url(/models/bunny.obj);" scale="100 100 100" position="-10 -4 -10">
 	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="100 100 100" dur="6600" easing="ease-out-elastic"></a-animation>
 	<a-animation attribute="rotation" from="0 0 0" to="0 360 0" dur="44000" easing="linear" repeat="indefinite"></a-animation>
 </a-entity>
-			</script>
+</script>
+
+
+<script id="ship" type="text/html">
+<a-entity rotation="0 -45 0">
+  <a-entity obj-model="obj: url(https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.obj); mtl: url(https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.mtl)">
+      <a-animation attribute="position" from="0 0 -200" fill="backwards" to="0 0 0" dur="1600" easing="ease-in"></a-animation>
+  </a-entity>
+</a-entity>
+</script>
+
 		</select>
 	</div>
 	<div id="code"></div>
