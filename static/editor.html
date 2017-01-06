@@ -2,6 +2,7 @@
 <html>
 
 <head>
+	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/lib/codemirror.css">
 	<link rel="stylesheet" href="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/addon/hint/show-hint.css">
 	<script src="https://cdn.rawgit.com/codemirror/CodeMirror/5.19.0/lib/codemirror.js"></script>
@@ -53,11 +54,25 @@
 		<select id="snippets" style="flex-grow: 1;">
 
 <script id="hello-world" type="text/html">
+<a-box></a-box>
+
 <a-entity position="-3 2.5 -1.5" scale="4 4 4">
 	<a-entity bmfont-text="text: <a-box></a-box>; width: 650;"></a-entity>
 	<a-entity geometry="primitive: plane; width: 2; height: 0.3;" position="0.9 0 -0.1" material="color: white; shader: flat;"></a-entity>
 </a-entity>
-<a-box></a-box>
+</script>
+
+<script id="text" type="text/html">
+<a-entity
+	bmfont-text="text: Hello World; color: white;"
+	position="0 2.5 0"
+	scale="4 4 4"
+></a-entity>
+<a-entity
+	text="text: Ada Rose; font: #samsung; size: 1; height: 1;"
+	position="0 1 -0.5"
+	material="color:lavenderblush;"
+></a-entity>
 </script>
 
 
@@ -77,6 +92,14 @@
 </a-entity>
 </script>
 
+<script id="two-boxes" type="text/html">
+<a-box position="0 2 0" width="2" height="2" depth="2" color="red">
+	<a-box position = "1 1 1" color="blue"></a-box>
+	<a-box position = "-1 1 -1" color="yellow"></a-box>
+	<a-animation repeat="indefinite" attribute="rotation" easing="linear" to="0 360 0" dur="2000"></a-animation>
+</a-box>
+</script>
+
 <script id="physics" type="text/html">
 <a-box material="color: blue;" dynamic-body position="0 0.4 0"></a-box>
 <a-box material="color: green;" dynamic-body position="-1.2 0.4 0"></a-box>
@@ -85,6 +108,61 @@
 <a-box material="color: purple;" dynamic-body position="0.55 1.5 0"></a-box>
 <a-box material="color: orange;" dynamic-body position="0 2.6 0"></a-box>
 <a-sphere dynamic-body="mass: 20;" position="0 0.5 5" radius="0.5" velocity="0 3 15"></a-sphere>
+</script>
+</script>
+
+<script id="robot" type="text/html">
+<a-entity id="robot" position="0 0 0">
+
+  <a-animation attribute="scale"
+               dur="5000"
+               direction="alternate"
+               from="3 3 3"
+               to="5 5 5"
+               repeat="indefinite"></a-animation>
+
+  <a-box id="body" width="0.3" depth="0.2" height="0.4" position="0 0.6 0" color="grey">
+
+    <!-- legs-->
+    <a-box id="leftleg" width="0.05" depth="0.05" height="0.4" position="-0.125 -0.4 0" color="cornflowerblue"></a-box>
+    <a-box id="rightleg" width="0.05" depth="0.05" height="0.4" position="0.125 -0.4 0" color="cornflowerblue"></a-box>
+
+    <a-entity id="rightshoulder" position="0.155 0.2 0" rotation="-45 0 0" >
+      <a-animation attribute="rotation"
+                   dur="700"
+                   direction="alternate"
+                   to="45 0 10"
+                   repeat="indefinite"></a-animation>
+      <!-- the shoulder has no geometry itself but is a point which will be rotated to move the arm -->
+      <a-box id="rightarm" width="0.05" depth="0.05" height="0.4" position="0.03 -0.2 0" color="mediumseagreen">
+        <a-sphere color="yellow" radius="0.04" position="0 -0.2 0"></a-sphere>
+      </a-box>
+    </a-entity>
+
+    <a-entity id="leftshoulder" position="-0.155 0.2 0" rotation="-45 0 0">
+      <a-animation attribute="rotation"
+                   dur="700"
+                   direction="alternate-reverse"
+                   to="45 0 -10"
+                   repeat="indefinite"></a-animation>
+      <!-- the shoulder has no geometry itself but is a point which will be rotated to move the arm -->
+      <a-box id="leftarm" width="0.05" depth="0.05" height="0.4" position="-0.03 -0.2 0" color="mediumseagreen">
+        <a-sphere color="yellow" radius="0.04" position="0 -0.2 0"></a-sphere>
+      </a-box>
+    </a-entity>
+
+    <a-cylinder id="head" color="grey" height="0.2" radius="0.08" segments-radial="8" position="0 0.3 0" rotation="0 -60 0">
+      <a-animation attribute="rotation"
+                   dur="2000"
+                   direction="alternate-reverse"
+                   to="0 60 0"
+                   repeat="indefinite"></a-animation>
+      <a-box id="lefteye" width="0.03" depth="0.03" height="0.03" position="-0.035 0.04 0.06" color="crimson"></a-box>
+      <a-box id="righteye" width="0.03" depth="0.03" height="0.03" position="0.035 0.04 0.06" color="crimson"></a-box>
+    </a-cylinder>
+  </a-box>
+  <a-entity geometry="primitive: plane;" class="shadow" scale="0.5 0.5 0.5" position="0 0 0" rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>
+</a-entity>
 </script>
 
 		</select>

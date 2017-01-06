@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 
 // 0th entry is always filled
 let ids = [true];
+let currentString = '';
 
 app.use(express.static(__dirname + '/static', {
 	maxAge: 3600 * 1000 * 24
@@ -26,7 +27,18 @@ wss.on('connection', function connection(ws) {
 
 		// Rebroadcast any string messages
 		if (typeof message === 'string') {
+			// update stored string
+
+			let data;
+
+			data = message.match(/^SLIDE:([\s\S]+)/);
+			if (data) currentString= data[1];
+
+			data = message.match(/^APPEND:([\s\S]+)/);
+			if (data) currentString += data[1];
+
 			wss.clients.forEach(function (ws) {
+
 				ws.send(message, function (e) {
 					if (e) {
 						console.log(e.message);
@@ -40,6 +52,7 @@ wss.on('connection', function connection(ws) {
 	});
 
 	ws.send('HANDSHAKE:' + id);
+	ws.send('SLIDE:' + currentString);
 });
 
 server.on('request', app);

@@ -2,6 +2,7 @@
 <html>
 <head>
 	<script src="scripts/aframe.js"></script>
+	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
 	<script src="https://rawgit.com/bryik/aframe-bmfont-text-component/master/dist/aframe-bmfont-text-component.min.js"></script>
 	<script src="https://cdn.rawgit.com/donmccurdy/aframe-physics-system/v1.2.0/dist/aframe-physics-system.min.js"></script>
@@ -32,7 +33,6 @@
 
 		<script>
 			if (location.search === '?watcher') {
-				console.log('Watching');
 				document.write('<a-entity position="0 3.2 -8" rotation="0 180 0"><a-camera user-height="0"></a-camera></a-entity>');
 			} else {
 				document.write('<a-entity><a-camera user-height="0"></a-camera></a-entity>')
@@ -46,7 +46,7 @@
 				<a-entity text="text: WebPerf; font: #dawning; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
 								material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" position="2.6 0 0"></a-entity>
 			</a-entity>
-			<a-entity id="dynamic-content" rotation="0 180 0">
+			<a-entity id="dynamic-content" class='slide-target' rotation="0 180 0">
 			</a-entity>
 		</a-entity>
 
@@ -61,7 +61,7 @@
 			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
 		</a-entity>
 	</a-scene>
-	<script src="build/main.js"></script>
 	<script src="scripts/slides.js"></script>
+	<script src="build/main.js"></script>
 </body>
 </html>

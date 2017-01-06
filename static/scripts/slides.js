@@ -6,31 +6,34 @@
 var ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
 ws.binaryType = 'arraybuffer';
 
-var contentHole = document.getElementById('dynamic-content');
+var contentHoles = Array.from(document.querySelectorAll('.slide-target'));
+var textHoles = Array.from(document.querySelectorAll('.slide-text-target'));
 
 ws.addEventListener('message', function m(e) {
 	if (typeof e.data !== 'string') return;
 
 	var data;
 
-	data = e.data.match(/SLIDE:([\s\S]+)/);
+	data = e.data.match(/^SLIDE:([\s\S]+)/);
 	if (data) {
-		if (contentHole) contentHole.innerHTML = data[1];
+		for (const contentHole of contentHoles) contentHole.innerHTML = data[1];
+		for (const textHole of textHoles) textHole.textContent = data[1];
 		return;
 	};
 
-	data = e.data.match(/SLIDE:(.+)<=([\s\S]+)/);
+	data = e.data.match(/^SLIDE:(.+)<=([\s\S]+)/);
 	if (data) {
-		if (contentHole) contentHole.querySelector(data[1]).innerHTML = data[2];
+		for (const contentHole of contentHoles) contentHole.querySelector(data[1]).innerHTML = data[2];
 		return;
 	};
 
-	data = e.data.match(/APPEND:([\s\S]+)/);
+	data = e.data.match(/^APPEND:([\s\S]+)/);
 	if (data) {
-		if (contentHole) {
+		for (const contentHole of contentHoles) {
 			const result = document.createRange().createContextualFragment(data[1]);
 			while (result.firstElementChild) contentHole.appendChild(result.firstElementChild);
 		}
+		for (const textHole of textHoles) textHole.textContent += data[1];
 		return;
 	};
 });
