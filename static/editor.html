@@ -71,10 +71,20 @@
 
 <script id="ship" type="text/html">
 <a-entity rotation="0 -45 0">
-  <a-entity obj-model="obj: url(https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.obj); mtl: url(https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.mtl)">
+  <a-entity obj-model="obj: #ship-obj; mtl: #ship-mtl;">
       <a-animation attribute="position" from="0 0 -200" fill="backwards" to="0 0 0" dur="1600" easing="ease-in"></a-animation>
   </a-entity>
 </a-entity>
+</script>
+
+<script id="physics" type="text/html">
+<a-box material="color: blue;" dynamic-body position="0 0.4 0"></a-box>
+<a-box material="color: green;" dynamic-body position="-1.2 0.4 0"></a-box>
+<a-box material="color: yellow;" dynamic-body position="1.2 0.4 0"></a-box>
+<a-box material="color: crimson;" dynamic-body position="-0.55 1.5 0"></a-box>
+<a-box material="color: purple;" dynamic-body position="0.55 1.5 0"></a-box>
+<a-box material="color: orange;" dynamic-body position="0 2.6 0"></a-box>
+<a-sphere dynamic-body="mass: 20;" position="0 0.5 5" radius="0.5" velocity="0 3 15"></a-sphere>
 </script>
 
 		</select>

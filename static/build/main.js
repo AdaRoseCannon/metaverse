@@ -12,6 +12,10 @@ var handshakeReg = /HANDSHAKE:(.+)/;
 var avatarContainer = document.querySelector('#avatar-container');
 var mode = location.search === '?speaker' && 'speaker' || location.search === '?watcher' && 'watcher' || 'guest';
 
+if (mode !== 'watcher') {
+	document.querySelector('a-scene').setAttribute('avatar-sync', 'enabled: true;');
+}
+
 // Socket data format
 // 0 id
 // 1-3 position

@@ -4,15 +4,10 @@
 	<script src="scripts/aframe.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/master/components/text/dist/aframe-text-component.min.js"></script>
 	<script src="https://rawgit.com/bryik/aframe-bmfont-text-component/master/dist/aframe-bmfont-text-component.min.js"></script>
+	<script src="https://cdn.rawgit.com/donmccurdy/aframe-physics-system/v1.2.0/dist/aframe-physics-system.min.js"></script>
 </head>
 <body>
-	<script>
-		if (location.search === '?watcher') {
-			document.write('<a-scene fog="color: #0e1734; density: 0.02; type: exponential">');
-		} else {
-			document.write('<a-scene avatar-sync="enabled: true;" fog="color: #0e1734; density: 0.02; type: exponential">')
-		}
-	</script>
+	<a-scene physics="debug: false; friction: 0.1; restitution: 0.25;" fog="color: #0e1734; density: 0.02; type: exponential">
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
 			<img id="pink" src="images/pink.jpg"></img>
@@ -24,6 +19,9 @@
 			<a-asset-item id="dawning" src="/fonts/dawning_of_a_new_day.json"></a-asset-item>
 			<a-asset-item id="fnt" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.fnt"></a-asset-item>
 			<img id="fntImage" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.png" />
+			<a-asset-item id="ship-obj" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.obj"></a-asset-item>
+			<a-asset-item id="ship-mtl" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.mtl"></a-asset-item>
+			<img id="shio-src" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/maps/diffuse.jpg"></img>
 		</a-assets>
 		<a-sky src="#sky" rotation="0 90 0" material="fog: false; depthTest: false;"></a-sky>
 		<a-entity id="floor" position="0 -0.2 0" static-body geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0" position="0 -0.2 0"
