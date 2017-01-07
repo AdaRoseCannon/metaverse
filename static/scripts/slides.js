@@ -8,6 +8,7 @@ ws.binaryType = 'arraybuffer';
 
 var contentHoles = Array.from(document.querySelectorAll('.slide-target'));
 var textHoles = Array.from(document.querySelectorAll('.slide-text-target'));
+var sky = document.querySelector('a-sky');
 
 ws.addEventListener('message', function m(e) {
 	if (typeof e.data !== 'string') return;
@@ -35,6 +36,11 @@ ws.addEventListener('message', function m(e) {
 		}
 		for (const textHole of textHoles) textHole.textContent += data[1];
 		return;
+	};
+
+	data = e.data.match(/^SKY:([\s\S]+)/);
+	if (data && sky) {
+		sky.setAttribute('src', data[1]);
 	};
 });
 
@@ -77,6 +83,11 @@ if (document.getElementById('code')) (function () {
 
 	select.addEventListener('change', function () {
 		editor.getDoc().setValue(datums[select.value]);
+	});
+
+	const skyBoxSelect = document.getElementById('set-sky');
+	skyBoxSelect.addEventListener('change', function () {
+		ws.send('SKY:' + skyBoxSelect.value)
 	});
 
 	document.getElementById('submit').addEventListener('click', function () {

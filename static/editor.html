@@ -75,11 +75,12 @@
 ></a-entity>
 </script>
 
-
 <script id="bunny" type="text/html">
-<a-entity obj-model="obj: url(/models/bunny.obj);" scale="100 100 100" position="-10 -4 -10">
-	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="100 100 100" dur="6600" easing="ease-out-elastic"></a-animation>
-	<a-animation attribute="rotation" from="0 0 0" to="0 360 0" dur="44000" easing="linear" repeat="indefinite"></a-animation>
+<a-entity scale="2 2 2" position="0 0 3">
+	<a-entity obj-model="obj: url(/models/bunny.obj);" scale="10 10 10" position="0 -0.4 0">
+		<a-animation attribute="scale" from="0 0 0" fill="backwards" to="10 10 10" dur="6600" easing="ease-out-elastic"></a-animation>
+		<a-animation attribute="rotation" from="0 0 0" to="0 360 0" dur="44000" easing="linear" repeat="indefinite"></a-animation>
+	</a-entity>
 </a-entity>
 </script>
 
@@ -165,6 +166,11 @@
 </a-entity>
 </script>
 
+		</select>
+		<select id="set-sky">
+			<option selected value="#sky">Default</option>
+			<option value="https://img.gs/bbdkhfbzkk/2048x1024,stretch/https://cdn.rawgit.com/AdaRoseEdwards/adaroseedwards.github.io/master/images/SAM_100_0122.jpg">Berlin</option>
+			<option value="https://img.gs/bbdkhfbzkk/2048x1024,stretch/https://samsunginternet.github.io/a-frame-demos/a-frame-assets/sky/CGSkies_0347_free.jpg">Sun Set</option>
 		</select>
 	</div>
 	<div id="code"></div>
