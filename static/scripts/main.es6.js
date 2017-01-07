@@ -7,7 +7,7 @@ const INVERSE_SCALE = 1 / SCALE;
 const MIDDLE = Math.pow(2, 31); //for storing negatives as Uint
 const RAD2DEG = 180 / Math.PI;
 const state = new Uint32Array(length);
-const handshakeReg = /HANDSHAKE:(.+)/;
+const handshakeReg = /^HANDSHAKE:(.+)/;
 const avatarContainer = document.querySelector('#avatar-container');
 const mode = (location.search === '?speaker' && 'speaker') ||
 	(location.search === '?watcher' && 'watcher') ||
