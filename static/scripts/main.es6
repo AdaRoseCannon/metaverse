@@ -84,6 +84,7 @@ AFRAME.registerSystem('avatar-sync', {
 			} else {
 
 				// handle byte data
+				if (!e.data.byteLength) return;
 				const d = new Uint32Array(e.data);
 				const tickOff = new Set(avatars.keys());
 				for (let i = 0, l = d.length; i < l; i += length) {
