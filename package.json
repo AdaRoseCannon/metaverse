@@ -16,10 +16,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/babel ./static/scripts/main.es6.js -o ./static/build/main.js",
+    "build": "./node_modules/.bin/babel ./static/scripts/ -d ./static/build/",
     "start": "npm run build; node .",
     "watch": "nodemon -w ./static/ -i static/build -x 'npm run build'"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
