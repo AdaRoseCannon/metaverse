@@ -44,6 +44,8 @@ function setPosition(el, id) {
 	const cols = 12;
 	const angle = 12;
 	const row = Math.floor(id / cols);
+
+	// radians
 	const pos = cylindricalToCartesian(
 		(220 + (id % cols) * angle) / RAD2DEG,
 		2.6 + row * 2,
@@ -160,8 +162,8 @@ AFRAME.registerSystem('avatar-sync', {
 		if (!this.data.enabled) return;
 		if (this.sceneEl.camera) {
 			this.updateState({
-				rotation: this.sceneEl.camera.parent.rotation,
-				position: this.sceneEl.camera.parent.position
+				rotation: this.sceneEl.camera.el.object3D.getWorldRotation(),
+				position: this.sceneEl.camera.el.object3D.getWorldPosition()
 			});
 		}
 	},
@@ -183,12 +185,12 @@ AFRAME.registerSystem('avatar-sync', {
 
 			// Init camera position
 			if (mode === 'guest') {
-				setPosition(this.sceneEl.querySelector('a-camera'), id);
-				this.sceneEl.querySelector('a-camera').setAttribute('rotation', '0 180 0');
+				setPosition(this.sceneEl.querySelector('a-camera').parentNode, id);
+				this.sceneEl.querySelector('a-camera').parentNode.setAttribute('rotation', '0 180 0');
 			}
 
 			if (mode === 'speaker') {
-				this.sceneEl.querySelector('a-camera').setAttribute('position', '3 2.2 0');
+				this.sceneEl.querySelector('a-camera').parentNode.setAttribute('position', '3 2.2 0');
 				this.setMiscState('speaker', true);
 			}
 		}
@@ -204,6 +206,7 @@ AFRAME.registerSystem('avatar-sync', {
 
 const avatarGen = color => `
 <a-entity><a-entity>
+	<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 	<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 	<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
 	<a-box material="color: ${color};" scale="" class="avatar-body"></a-box>
