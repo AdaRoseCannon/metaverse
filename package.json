@@ -18,7 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/babel ./static/scripts/ -d ./static/build/",
     "start": "npm run build; node .",
-    "watch": "nodemon -w ./static/ -i static/build -x 'npm run build'"
+    "watch": "nodemon -i static/build -x 'npm run build'"
   },
   "author": "",
   "license": "MIT"

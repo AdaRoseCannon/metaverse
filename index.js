@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000;
 // 0th entry is always filled
 let ids = [true];
 let currentString = '';
+let currentSky;
+let currentEnvironment;
 
 app.use(express.static(__dirname + '/static', {
 	maxAge: 3600 * 1000 * 24
@@ -37,6 +39,12 @@ wss.on('connection', function connection(ws) {
 			data = message.match(/^APPEND:([\s\S]+)/);
 			if (data) currentString += data[1];
 
+			data = message.match(/^SKY:([\s\S]+)/);
+			if (data) currentSky = data[1];
+
+			data = message.match(/^ENVIRONMENT:([\s\S]+)/);
+			if (data) currentEnvironment = data[1];
+
 			wss.clients.forEach(function (ws) {
 
 				ws.send(message, function (e) {
@@ -53,6 +61,8 @@ wss.on('connection', function connection(ws) {
 
 	ws.send('HANDSHAKE:' + id);
 	ws.send('SLIDE:' + currentString);
+	if (currentSky) ws.send('SKY:' + currentSky);
+	if (currentEnvironment) ws.send('ENVIRONMENT:' + currentEnvironment);
 });
 
 server.on('request', app);

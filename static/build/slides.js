@@ -6,14 +6,15 @@
 var ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
 ws.binaryType = 'arraybuffer';
 
-var contentHoles = Array.from(document.querySelectorAll('.slide-target'));
-var textHoles = Array.from(document.querySelectorAll('.slide-text-target'));
-var sky = document.querySelector('a-sky');
-
 ws.addEventListener('message', function m(e) {
 	if (typeof e.data !== 'string') return;
 
-	var data;
+	var contentHoles = Array.from(document.querySelectorAll('.slide-target'));
+	var textHoles = Array.from(document.querySelectorAll('.slide-text-target'));
+	var sky = document.querySelector('a-sky');
+	var stage = document.getElementById('stage');
+
+	var data = void 0;
 
 	data = e.data.match(/^SLIDE:([\s\S]+)/);
 	if (data) {
@@ -97,6 +98,12 @@ ws.addEventListener('message', function m(e) {
 		return;
 	};
 
+	data = e.data.match(/^ENVIRONMENT:([\s\S]+)/);
+	if (data) {
+		if (stage) stage.setAttribute('environment', data[1]);
+		return;
+	};
+
 	data = e.data.match(/^APPEND:([\s\S]+)/);
 	if (data) {
 		var _iteratorNormalCompletion4 = true;
@@ -156,7 +163,7 @@ ws.addEventListener('message', function m(e) {
 
 	data = e.data.match(/^SKY:([\s\S]+)/);
 	if (data && sky) {
-		sky.setAttribute('src', data[1]);
+		sky.setAttribute('material', 'src: ' + data[1] + '; fog: false; depthTest: false; shader: flat;');
 	};
 });
 
@@ -222,6 +229,11 @@ if (document.getElementById('code')) (function () {
 	var skyBoxSelect = document.getElementById('set-sky');
 	skyBoxSelect.addEventListener('change', function () {
 		ws.send('SKY:' + skyBoxSelect.value);
+	});
+
+	var environmentSelect = document.getElementById('set-environment');
+	environmentSelect.addEventListener('change', function () {
+		ws.send('ENVIRONMENT:' + environmentSelect.value);
 	});
 
 	document.getElementById('submit').addEventListener('click', function () {

@@ -19,11 +19,13 @@
 			<a-asset-item id="samsung" src="/fonts/SamsungOne_Regular.json"></a-asset-item>
 			<a-asset-item id="dawning" src="/fonts/dawning_of_a_new_day.json"></a-asset-item>
 			<a-asset-item id="fnt" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.fnt"></a-asset-item>
-			<img id="fntImage" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.png" />
+			<img id="fntImage" crossorigin="anonymous" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.png" />
 			<a-asset-item id="ship-obj" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.obj"></a-asset-item>
 			<a-asset-item id="ship-mtl" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.mtl"></a-asset-item>
-			<img id="shio-src" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/maps/diffuse.jpg"></img>
+			<img id="shio-src" crossorigin="anonymous" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/maps/diffuse.jpg"></img>
+			<img id="sunset" crossorigin="anonymous" src="https://img.gs/bbdkhfbzkk/2048x1024,stretch/https://samsunginternet.github.io/a-frame-demos/a-frame-assets/sky/CGSkies_0347_free.jpg"></img>
 		</a-assets>
+
 		<a-sky src="#sky" rotation="0 90 0" material="fog: false; depthTest: false;"></a-sky>
 		<a-entity id="floor" position="0 -0.2 0" static-body geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0" position="0 -0.2 0"
 						material="src: #grid; repeat: 4000 4000; metalness:0.0; roughness: 1;"></a-entity>
@@ -31,25 +33,72 @@
 
 		<a-entity id="avatar-container"></a-entity>
 
+		<a-entity id="camera-wrapper"><a-camera user-height="0"></a-camera></a-entity>
+
 		<script>
 			if (location.search === '?watcher') {
-				document.write('<a-entity position="0 3.2 -8" rotation="0 180 0"><a-camera user-height="0"></a-camera></a-entity>');
-			} else {
-				document.write('<a-entity><a-camera user-height="0"></a-camera></a-entity>')
+				var cameraWrapper = document.getElementById('camera-wrapper');
+				cameraWrapper.setAttribute('position', '0 3.2 -8');
+				cameraWrapper.setAttribute('rotation', '0 180 0');
 			}
 		</script>
 
-		<a-entity id="stage">
-			<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
-			<a-entity position="2 8.85 2.57" scale="1.2 1.2 1.2" rotation="0 180 -9">
-				<a-entity text="text: LDN; font: #samsung; size: 1;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" ></a-entity>
-				<a-entity text="text: WebPerf; font: #dawning; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
-								material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" position="2.6 0 0"></a-entity>
-			</a-entity>
-			<a-entity id="dynamic-content" class='slide-target' rotation="0 180 0">
-			</a-entity>
+		<!-- environment stuff goes here -->
+		<a-entity id="stage" environment="environment-stage">
 		</a-entity>
 
+	</a-scene>
+
+	<script>
+
+		var stage = document.getElementById('stage');
+		var scene = document.querySelector('a-scene');
+
+		scene.addEventListener('loaded', function () {
+			var RAD2DEG = 180 / Math.PI;
+			var registerPositionFn = stage.components.environment.registerPositionFn;
+
+			function cylindricalToCartesian(phi, h, r) {
+				return {
+					x: r * Math.cos(phi),
+					y: h,
+					z: r * Math.sin(phi)
+				};
+			}
+
+			// for setting the camera positions on the stage layout
+			registerPositionFn('environment-stage', function stage (el, mode, id) {
+
+				const cols = 12;
+				const angle = 12;
+				const row = Math.floor(id / cols);
+
+				// radians
+				const pos = cylindricalToCartesian(
+					(220 + (id % cols) * angle) / RAD2DEG,
+					2.6 + row * 2,
+					(5 + row)* 2
+				);
+
+				if (mode === 'guest') {
+					el.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+					el.setAttribute('rotation', '0 180 0');
+				}
+				if (mode === 'speaker') {
+					el.setAttribute('position', '3 2.2 0');
+				}
+			});
+		});
+	</script>
+
+	<!-- this contains the contents for the environment compnent -->
+	<script id="environment-stage" type="text/html">
+		<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
+		<a-entity position="2 8.85 2.57" scale="1.2 1.2 1.2" rotation="0 180 -9">
+			<a-entity text="text: LDN; font: #samsung; size: 1;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" ></a-entity>
+			<a-entity text="text: WebPerf; font: #dawning; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
+							material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" position="2.6 0 0"></a-entity>
+		</a-entity>
 
 		<a-entity material="color: grey; metalness: 0; roughness: 1; side: double;" obj-model="obj: #theatre;" rotation="0 160 0"
 						scale="2 2 2"></a-entity>
@@ -57,11 +106,35 @@
 		<a-entity light="color: #ffaaff; intensity: 1.5" position="15 5 5"></a-entity>
 		<a-entity light="color: #aaffaa; intensity: 0.7" position="-15 5 15"></a-entity>
 
+		<!-- stuff injected via websockets -->
+		<a-entity class='slide-target' rotation="0 180 0">
+		</a-entity>
+
 		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:4.48;penumbra:0.04;type:spot;target:null" position="0 15 -8">
 			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
 		</a-entity>
-	</a-scene>
+	</script>
+
+	<script id="environment-train" type="text/html">
+		<a-entity text="text: TRAIN; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
+
+		<a-entity material="color: grey; metalness: 0; roughness: 1; side: double;" obj-model="obj: #theatre;" rotation="0 160 0"
+						scale="2 2 2"></a-entity>
+		<a-entity light="color: #0e1734; intensity: 0.7; type: ambient;" visible=""></a-entity>
+		<a-entity light="color: #ffaaff; intensity: 1.5" position="15 5 5"></a-entity>
+		<a-entity light="color: #aaffaa; intensity: 0.7" position="-15 5 15"></a-entity>
+
+		<!-- stuff injected via websockets -->
+		<a-entity class='slide-target' rotation="0 180 0">
+		</a-entity>
+
+		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:4.48;penumbra:0.04;type:spot;target:null" position="0 15 -8">
+			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
+		</a-entity>
+	</script>
+
 	<script src="build/slides.js"></script>
+	<script src="build/environment.js"></script>
 	<script src="build/main.js"></script>
 </body>
 </html>
