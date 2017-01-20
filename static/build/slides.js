@@ -3,8 +3,7 @@
 
 'use strict';
 
-var ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
-ws.binaryType = 'arraybuffer';
+var ws = window.webSocketConnection;
 
 ws.addEventListener('message', function m(e) {
 	if (typeof e.data !== 'string') return;

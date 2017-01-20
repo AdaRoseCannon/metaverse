@@ -15,6 +15,7 @@
 	const stage = document.getElementById('stage');
 	const avatarContainer = document.getElementById('avatar-container');
 	const cameraWrapper = document.getElementById('camera-wrapper');
+	const ws = window.webSocketConnection;
 	const mode = (location.search === '?speaker' && 'speaker') ||
 		(location.search === '?watcher' && 'watcher') ||
 		'guest';
@@ -55,9 +56,6 @@
 			if (!this.data.enabled) return;
 
 			const self = this;
-
-			const ws = new WebSocket((location.hostname === 'localhost' ? 'ws://' : 'wss://') + location.host);
-			ws.binaryType = 'arraybuffer';
 			this.webSocket = ws;
 
 			const avatars = new Map();
@@ -149,6 +147,9 @@
 
 		tick: function () {
 			if (!this.data.enabled) return;
+
+			// only update if data is being sent
+			if (this.webSocket.bufferedAmount !== 0) return;
 			if (this.sceneEl.camera) {
 				this.updateState({
 					rotation: this.sceneEl.camera.el.object3D.getWorldRotation(),
