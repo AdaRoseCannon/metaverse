@@ -7,6 +7,7 @@ const wss = new WebSocketServer({ server: server });
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+const constants = require('./lib/constants');
 
 // 0th entry is always filled
 let ids = [true];
@@ -94,4 +95,4 @@ setInterval(function () {
 	for (const n of presentIds) {
 		ids[n] = true;
 	}
-}, 16);
+}, constants.SYNC_INTERVAL);

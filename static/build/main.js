@@ -2,6 +2,10 @@
 /* eslint no-console: 0 */
 'use strict';
 
+var constants = {
+	SYNC_INTERVAL: 100
+};
+
 (function (global) {
 
 	var AFRAME = global.AFRAME;
@@ -51,7 +55,24 @@
 			}
 		},
 		init: function init() {
+			var _this = this;
+
 			if (!this.data.enabled) return;
+
+			setInterval(function () {
+				if (!_this.data.enabled) return;
+
+				// only update if data is being sent
+				if (_this.webSocket.bufferedAmount !== 0) return;
+
+				// Only update if it has an id
+				if (_this.sceneEl.camera && state[0]) {
+					_this.updateState({
+						rotation: _this.sceneEl.camera.el.object3D.getWorldRotation(),
+						position: _this.sceneEl.camera.el.object3D.getWorldPosition()
+					});
+				}
+			}, constants.SYNC_INTERVAL);
 
 			var self = this;
 			this.webSocket = ws;
@@ -99,27 +120,31 @@
 						if (!avatars.has(id)) {
 							avatar = makeAvatarEl(id);
 							console.log('Creating new Avatar', id);
+
+							avatar.rotator1 = avatar.querySelector('.rot1');
+							avatar.rotator2 = avatar.querySelector('.rot2');
+							avatar.mover = avatar.querySelector('.mover');
+
 							avatars.set(id, avatar);
 
-							// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
-							avatar.setAttribute('position', posX + ' ' + posY + ' ' + posZ);
-							avatar.setAttribute('rotation', '0 ' + rotY * RAD2DEG + ' 0');
-							avatar.firstChild.setAttribute('rotation', rotX * RAD2DEG + ' 0 ' + rotZ * RAD2DEG);
 							avatarContainer.appendChild(avatar);
 						} else {
 							// update existing avatar
 							avatar = avatars.get(id);
 							if (avatar.object3D) {
 
-								// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
-								avatar.firstChild.object3D.rotation.x = rotX;
-								avatar.object3D.rotation.y = rotY;
-								avatar.firstChild.object3D.rotation.z = rotZ;
-								avatar.object3D.position.x = posX;
-								avatar.object3D.position.y = posY;
-								avatar.object3D.position.z = posZ;
+								// start the tweens happening
 							}
 						}
+
+						// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
+						avatar.rotator2.setAttribute('from', avatar.rotator2.getAttribute('to'));
+						avatar.rotator2.setAttribute('to', rotX * RAD2DEG + ' 0 ' + rotZ * RAD2DEG);
+						avatar.rotator1.setAttribute('from', avatar.rotator1.getAttribute('to'));
+						avatar.rotator1.setAttribute('to', '0 ' + rotY * RAD2DEG + ' 0');
+						avatar.mover.setAttribute('from', avatar.mover.getAttribute('to'));
+						avatar.mover.setAttribute('to', posX + ' ' + (posY + Math.random() * 0.0001) + ' ' + posZ);
+						avatar.rotator2.emit('tween-start');
 
 						if (Number(avatar.dataset.misc || 0) !== misc) {
 							if (getMiscState(misc, 'speaker')) {
@@ -133,7 +158,7 @@
 
 					tickOff.forEach(function (id) {
 						var a = avatars.get(id);
-						a.firstChild.emit('remove');
+						a.emit('remove');
 						avatars.delete(id);
 						setTimeout(function () {
 							avatarContainer.removeChild(a);
@@ -141,19 +166,6 @@
 					});
 				}
 			});
-		},
-
-		tick: function tick() {
-			if (!this.data.enabled) return;
-
-			// only update if data is being sent
-			if (this.webSocket.bufferedAmount !== 0) return;
-			if (this.sceneEl.camera) {
-				this.updateState({
-					rotation: this.sceneEl.camera.el.object3D.getWorldRotation(),
-					position: this.sceneEl.camera.el.object3D.getWorldPosition()
-				});
-			}
 		},
 
 		// toggle values in the boolean number
@@ -193,7 +205,7 @@
 	});
 
 	var avatarGen = function avatarGen(color) {
-		return '\n\t<a-entity><a-entity>\n\t\t<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t\t<a-box material="color: ' + color + ';" scale="" class="avatar-body"></a-box>\n\t\t<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t\t<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t\t<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">\n\t\t\t<a-box material="color: ' + color + ';" class="avatar-mouth" position="0 0 -0.5" scale="1 0.2 1">\n\t\t\t\t<a-box material="color: pink; roughness: 1; metalness: 0;" position="0 0.6 0" scale="0.8 0.2 0.8"></a-box>\n\t\t\t</a-box>\n\t\t\t<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>\n\t\t</a-entity>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t\t</a-sphere>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t\t</a-sphere>\n\t</a-entity>\n\t<a-entity geometry="primitive: plane;" class="shadow" place-on-ground rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>\n\t</a-entity>';
+		return '\n\t<a-entity>\n\t\t<a-entity>\n\t\t\t<a-animation attribute="rotation" class="rot2" to="0 0 0" dur="' + constants.SYNC_INTERVAL + '" begin="tween-start" easing="linear" fill="both"></a-animation>\n\t\t\t<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t\t<a-box material="color: ' + color + ';" scale="" class="avatar-body"></a-box>\n\t\t\t<a-entity position="0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t\t\t<a-entity position="-0.25 0 -0.5" geometry="primitive: sphere; radius: 0.2;" material="shader: standard; color: white; sphericalEnvMap: #sky; metalness: 0.3; roughness:0.6;"></a-entity>\n\t\t\t<a-entity class="flap" position="0 -0.6 0.5" rotation="-10 0 0">\n\t\t\t\t<a-box material="color: ' + color + ';" class="avatar-mouth" position="0 0 -0.5" scale="1 0.2 1">\n\t\t\t\t\t<a-box material="color: pink; roughness: 1; metalness: 0;" position="0 0.6 0" scale="0.8 0.2 0.8"></a-box>\n\t\t\t\t</a-box>\n\t\t\t\t<a-animation attribute="rotation" fill="both" to="-20 0 0" from="-10 0 0" dur="68" count="2" direction="alternate" begin="talk"></a-animation>\n\t\t\t</a-entity>\n\t\t</a-entity>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t\t<a-animation attribute="rotation" class="rot1" to="0 0 0" dur="' + constants.SYNC_INTERVAL + '" begin="tween-start" easing="linear" fill="both"></a-animation>\n\t\t<a-animation attribute="position" class="mover" to="0 0 0" dur="' + constants.SYNC_INTERVAL + '" begin="tween-start" easing="linear" fill="both"></a-animation>\n\t\t<a-entity geometry="primitive: plane;" class="shadow" place-on-ground rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t\t</a-sphere>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t\t</a-sphere>\n\t</a-entity>';
 	};
 
 	function makeAvatarEl(id) {
