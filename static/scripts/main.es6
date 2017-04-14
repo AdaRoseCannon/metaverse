@@ -3,18 +3,18 @@
 'use strict';
 
 const constants = {
-	SYNC_INTERVAL: 100
+	SYNC_INTERVAL: 64
 };
 
 (function (global) {
 
 	const AFRAME = global.AFRAME;
 	const length = 8;
-	const SCALE = 1000; //for storing decimal as Uint
+	const SCALE = 512; //for storing decimal as Uint
 	const INVERSE_SCALE = 1 / SCALE;
-	const MIDDLE = Math.pow(2, 31); //for storing negatives as Uint
+	const MIDDLE = Math.pow(2, 15); //for storing negatives as Uint
 	const RAD2DEG = 180 / Math.PI;
-	const state = new Uint32Array(length);
+	const state = new Uint16Array(length);
 	const handshakeReg = /^HANDSHAKE:(.+)/;
 	const stage = document.getElementById('stage');
 	const avatarContainer = document.getElementById('avatar-container');
@@ -93,7 +93,7 @@ const constants = {
 
 					// handle byte data
 					if (!e.data.byteLength) return;
-					const d = new Uint32Array(e.data);
+					const d = new Uint16Array(e.data);
 					const tickOff = new Set(avatars.keys());
 					for (let i = 0, l = d.length; i < l; i += length) {
 
@@ -121,9 +121,7 @@ const constants = {
 							avatar = makeAvatarEl(id);
 							console.log('Creating new Avatar', id);
 
-							avatar.rotator1 = avatar.querySelector('.rot1');
-							avatar.rotator2 = avatar.querySelector('.rot2');
-							avatar.mover = avatar.querySelector('.mover');
+							avatar.body = avatar.firstElementChild;
 
 							avatars.set(id, avatar);
 
@@ -138,13 +136,9 @@ const constants = {
 						}
 
 						// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
-						avatar.rotator2.setAttribute('from', avatar.rotator2.getAttribute('to'));
-						avatar.rotator2.setAttribute('to', `${rotX * RAD2DEG} 0 ${rotZ * RAD2DEG}`);
-						avatar.rotator1.setAttribute('from', avatar.rotator1.getAttribute('to'));
-						avatar.rotator1.setAttribute('to', `0 ${rotY * RAD2DEG} 0`);
-						avatar.mover.setAttribute('from', avatar.mover.getAttribute('to'));
-						avatar.mover.setAttribute('to', `${posX} ${posY + Math.random() * 0.0001} ${posZ}`);
-						avatar.rotator2.emit('tween-start');
+						avatar.body.setAttribute('rotation', `${rotX * RAD2DEG} 0 ${rotZ * RAD2DEG}`);
+						avatar.setAttribute('rotation', `0 ${rotY * RAD2DEG} 0`);
+						avatar.setAttribute('position', `${posX} ${posY + Math.random() * 0.0001} ${posZ}`);
 
 						if (Number(avatar.dataset.misc || 0) !== misc) {
 							if (getMiscState(misc, 'speaker')) {
@@ -156,6 +150,7 @@ const constants = {
 						}
 					}
 
+					// any not accounted for need to be removed
 					tickOff.forEach(function (id) {
 						const a = avatars.get(id);
 						a.emit('remove');
@@ -203,7 +198,6 @@ const constants = {
 	const avatarGen = color => `
 	<a-entity>
 		<a-entity>
-			<a-animation attribute="rotation" class="rot2" to="0 0 0" dur="${constants.SYNC_INTERVAL}" begin="tween-start" easing="linear" fill="both"></a-animation>
 			<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 			<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 			<a-box material="color: ${color};" scale="" class="avatar-body"></a-box>
@@ -217,9 +211,6 @@ const constants = {
 			</a-entity>
 		</a-entity>
 		<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>
-		<a-animation attribute="rotation" class="rot1" to="0 0 0" dur="${constants.SYNC_INTERVAL}" begin="tween-start" easing="linear" fill="both"></a-animation>
-		<a-animation attribute="position" class="mover" to="0 0 0" dur="${constants.SYNC_INTERVAL}" begin="tween-start" easing="linear" fill="both"></a-animation>
-		<a-entity geometry="primitive: plane;" class="shadow" place-on-ground rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>
 		<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ${color}; shader: flat; transparent: true;">
 			<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>
 			<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>
@@ -235,9 +226,10 @@ const constants = {
 	}
 
 	function addCrown(el) {
-		el.querySelector('.avatar-body').appendChild(document.createRange().createContextualFragment(`
+		el.querySelector('.avatar-body').insertAdjacentHTML('beforeend', `
 			<a-entity obj-model="obj: #crown;" position="0.31 0.51 0.17" scale="0.8 0.8 0.8" material="color: #ffc800;; sphericalEnvMap: #sky; metalness: 0.8; roughness:0.3;" rotation="4 -0.5 -9"></a-entity>
-		`).firstElementChild);
+		`);
+		el.insertAdjacentHTML('beforeend', '<a-entity geometry="primitive: plane;" class="shadow" place-on-ground rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>');
 	}
 
 	// for (let id = 0; id < 100; id++) {
