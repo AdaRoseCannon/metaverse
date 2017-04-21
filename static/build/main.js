@@ -3,7 +3,7 @@
 'use strict';
 
 var constants = {
-	SYNC_INTERVAL: 64
+	SYNC_INTERVAL: 32
 };
 
 (function (global) {
