@@ -2,11 +2,19 @@
 <html>
 <head>
 	<title>Metaverse</title>
-	<script src="scripts/aframe.js"></script>
+	<script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
 	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 	<script src="https://cdn.rawgit.com/donmccurdy/aframe-physics-system/v1.2.0/dist/aframe-physics-system.min.js"></script>
-	<script src="https://cdn.rawgit.com/ngokevin/kframe/6d7a0bc9/components/text-geometry/dist/aframe-text-geometry-component.min.js"></script>
-	<!--<script src="https://rawgit.com/bryik/aframe-bmfont-text-component/master/dist/aframe-bmfont-text-component.min.js"></script>-->
+	<script src="https://unpkg.com/aframe-text-geometry-component/dist/aframe-text-geometry-component.min.js"></script>
+	<script src="build/environment.js"></script>
+	<script>
+		AFRAME.registerComponent('place-on-ground', {
+			schema: {},
+			tick() {
+				this.el.object3D.position.y -= this.el.object3D.getWorldPosition().y;
+			}
+		});
+	</script>
 </head>
 <body>
 	<a-scene physics="debug: false; friction: 0.1; restitution: 0.25;" fog="color: #0e1734; density: 0.02; type: exponential">
@@ -94,11 +102,11 @@
 
 	<!-- this contains the contents for the environment compnent -->
 	<script id="environment-stage" type="text/html">
-		<a-entity text="text: WebVR; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
+		<a-entity text-geometry="value: WebVR; font: #samsung;" material="color: white;" position="4.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
 		<a-entity position="2 8.85 2.57" scale="1.2 1.2 1.2" rotation="0 180 -9">
-			<a-entity text="text: LDN; font: #samsung; size: 1;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" ></a-entity>
-			<a-entity text="text: WebPerf; font: #dawning; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
-							material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" position="2.6 0 0"></a-entity>
+			<a-entity text-geometry="value: Ada's; font: #dawning; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" ></a-entity>
+			<a-entity text-geometry="value:Metaverse; font: #samsung; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
+							material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;" position="4.2 0 0"></a-entity>
 		</a-entity>
 
 		<a-entity material="color: grey; metalness: 0; roughness: 1; side: double;" obj-model="obj: #theatre;" rotation="0 160 0"
@@ -117,7 +125,7 @@
 	</script>
 
 	<script id="environment-train" type="text/html">
-		<a-entity text="text: TRAIN; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
+		<a-entity text="value: TRAIN; font: #samsung" material="color: white;" position="6.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
 
 		<a-entity material="color: grey; metalness: 0; roughness: 1; side: double;" obj-model="obj: #theatre;" rotation="0 160 0"
 						scale="2 2 2"></a-entity>
@@ -136,7 +144,6 @@
 
 	<script src="scripts/websockets.js"></script>
 	<script src="build/slides.js"></script>
-	<script src="build/environment.js"></script>
 	<script src="build/main.js"></script>
 </body>
 </html>

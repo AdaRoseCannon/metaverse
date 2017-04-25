@@ -58,19 +58,19 @@
 <a-box></a-box>
 
 <a-entity position="-3 2.5 -1.5" scale="4 4 4">
-	<a-entity bmfont-text="text: <a-box></a-box>; width: 650;"></a-entity>
+	<a-entity text="value: <a-box></a-box>; width: 650;"></a-entity>
 	<a-entity geometry="primitive: plane; width: 2; height: 0.3;" position="0.9 0 -0.1" material="color: white; shader: flat;"></a-entity>
 </a-entity>
 </script>
 
 <script id="text" type="text/html">
 <a-entity
-	bmfont-text="text: Hello World; color: white;"
-	position="0 2.5 0"
+	text="value: Hello World; color: white;width: 2; align: center; wrap-count: 11;"
+	position="0 3 0"
 	scale="4 4 4"
 ></a-entity>
 <a-entity
-	text="text: Ada Rose; font: #samsung; size: 1; height: 1;"
+	text-geometry="value: Ada Rose; font: #samsung; size: 1; height: 1;"
 	position="0 1 -0.5"
 	material="color:lavenderblush;"
 ></a-entity>

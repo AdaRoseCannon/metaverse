@@ -237,11 +237,4 @@ const constants = {
 	// 	setPosition(avatar, id);
 	// 	avatarContainer.appendChild(avatar);
 	// }
-
-	AFRAME.registerComponent('place-on-ground', {
-		schema: {},
-		tick() {
-			this.el.object3D.position.y -= this.el.object3D.getWorldPosition().y;
-		}
-	});
 } (this || window));
