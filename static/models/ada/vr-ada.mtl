@@ -1,0 +1,32 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl Ada
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.840000 0.840000 0.840000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Ada Diffuse Color.png
+
+newmtl Eyes
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.645490 0.526275 0.469804
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd EyeSprites.png
+
+newmtl Mouth
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd MouthSprites.png

@@ -133,14 +133,20 @@ var constants = {
 
 						if (Number(avatar.dataset.misc || 0) !== misc) {
 							if (getMiscState(misc, 'speaker')) {
+
 								avatar.removeChild(avatar.body);
 								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="0.2 0.2 0.2"></a-entity>');
 								avatar.body = avatar.firstChild;
+
+								avatar.setAttribute('scale', '1.5 1.5 1.5');
+								avatar.querySelector('.shadow').setAttribute('scale', '1.5 1.5 1.5');
 							}
 							avatar.dataset.misc = misc;
 						}
 
-						avatar.setAttribute('rotation', -rotX * RAD2DEG + ' ' + (rotY * RAD2DEG + 180) + ' ' + rotZ * RAD2DEG);
+						// seperating the xz and y rotations allow us to rotate the shadow in place on the floor
+						avatar.body.setAttribute('rotation', rotX * RAD2DEG + ' 0 ' + rotZ * RAD2DEG);
+						avatar.setAttribute('rotation', '0 ' + rotY * RAD2DEG + ' 0');
 						avatar.setAttribute('position', posX + ' ' + (posY + Math.random() * 0.0001) + ' ' + posZ);
 					}
 
@@ -193,11 +199,16 @@ var constants = {
 	});
 
 	var avatarGen = function avatarGen(color) {
-		return '<a-entity>\n        <a-entity obj-model="obj: #student-obj; mtl: #student-mtl" student-model scale="0.4 0.4 0.4" shadow="receive: false;" position="0 -1.2 -0.5"></a-entity>\n\t\t<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t\t</a-sphere>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t\t</a-sphere>\n\t</a-entity>';
+		return '<a-entity>\n        <a-entity obj-model="obj: #student-obj; mtl: #student-mtl" student-model scale="0.4 0.4 0.4" shadow="receive: false;"></a-entity>\n\t\t<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t\t</a-sphere>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t\t</a-sphere>\n\t</a-entity>';
 	};
 
 	function makeAvatarEl(id) {
 		return document.createRange().createContextualFragment(avatarGen('hsl(' + id * 137.5 % 360 + ',80%,60%)')).firstElementChild;
+	}
+
+	function addCrown(el) {
+		el.querySelector('.avatar-body').insertAdjacentHTML('beforeend', '\n\t\t\t<a-entity obj-model="obj: #crown;" position="0.31 0.51 0.17" scale="0.8 0.8 0.8" material="color: #ffc800;; sphericalEnvMap: #sky; metalness: 0.8; roughness:0.3;" rotation="4 -0.5 -9"></a-entity>\n\t\t');
+		el.insertAdjacentHTML('beforeend', '<a-entity geometry="primitive: plane;" class="shadow" place-on-ground rotation="-90 0 0" material="shader: flat; src: #shadow; transparent: true; opacity: 0.4;"></a-entity>');
 	}
 
 	// for (let id = 0; id < 100; id++) {

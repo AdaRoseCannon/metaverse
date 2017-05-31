@@ -1,0 +1,22 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl Mask
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.840000 0.840000 0.840000
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Mask.png
+
+newmtl Student
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.218824 0.218824 0.218824
+Ks 0.010000 0.010000 0.010000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Student.png
