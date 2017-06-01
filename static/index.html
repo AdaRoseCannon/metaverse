@@ -8,17 +8,22 @@
 	<script src="https://cdn.rawgit.com/donmccurdy/aframe-physics-system/v1.2.0/dist/aframe-physics-system.min.js"></script>
 	<script src="https://unpkg.com/aframe-text-geometry-component/dist/aframe-text-geometry-component.min.js"></script>
 	<script src="build/environment.js"></script>
-	<script>
-		AFRAME.registerComponent('place-on-ground', {
-			schema: {},
-			tick() {
-				this.el.object3D.position.y -= this.el.object3D.getWorldPosition().y;
-			}
-		});
-	</script>
+	<script src="scripts/avatars.js"></script>
+	<script src="https://samsunginternet.github.io/a-frame-components/dist/ocean-plane.js"></script>
 </head>
 
 <body>
+
+	<!-- 
+		Initial Scene
+
+		Lists Assets
+		SkyBox
+		Floor
+		Avatar-container
+		Camera
+		container for the environemnt
+	-->
 	<a-scene physics="debug: false; friction: 0.1; restitution: 0.25;" fog="color: #0e1734; density: 0.02; type: exponential">
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
@@ -30,25 +35,26 @@
 			<a-asset-item id="student-obj" src="/models/student/student.obj"></a-asset-item>
 			<a-asset-item id="student-mtl" src="/models/student/student.mtl"></a-asset-item>
 			<a-asset-item id="theatre" src="/models/theatre.obj"></a-asset-item>
-			<a-asset-item id="crown" src="/models/crown.obj"></a-asset-item>
+			<a-asset-item id="dune-obj" src="/models/dune/dune.obj"></a-asset-item>
+			<a-asset-item id="dune-horizon-obj" src="/models/dune/dune-surround.obj"></a-asset-item>
 			<a-asset-item id="samsung" src="/fonts/SamsungOne_Regular.json"></a-asset-item>
 			<a-asset-item id="dawning" src="/fonts/dawning_of_a_new_day.json"></a-asset-item>
+			<a-asset-item id="bungee" src="/fonts/Bungee Outline_Regular.json"></a-asset-item>
 			<a-asset-item id="fnt" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.fnt"></a-asset-item>
 			<img id="fntImage" crossorigin="anonymous" src="https://cdn.rawgit.com/bryik/aframe-bmfont-text-component/aa0655cf90f646e12c40ab4708ea90b4686cfb45/assets/DejaVu-sdf.png" />
 			<a-asset-item id="ship-obj" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.obj"></a-asset-item>
 			<a-asset-item id="ship-mtl" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/Feisar_Ship.mtl"></a-asset-item>
 			<img id="ship-src" crossorigin="anonymous" src="https://cdn.rawgit.com/SamsungInternet/a-frame-demos/gh-pages/a-frame-assets/Feisar_Ship_OBJ/maps/diffuse.jpg"></img>
-			<img id="sunset" crossorigin="anonymous" src="https://img.gs/bbdkhfbzkk/2048x1024,stretch/https://samsunginternet.github.io/a-frame-demos/a-frame-assets/sky/CGSkies_0347_free.jpg"></img>
+			<img id="sunset" crossorigin="anonymous" src="/images/sunset.jpg"></img>
+			<img id="water-normal" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/waternormals.jpg" crossorigin="anonymous" />
 		</a-assets>
 
-		<a-sky src="#sky" rotation="0 90 0" material="fog: false; depthTest: false;"></a-sky>
-		<a-entity id="floor" position="0 -0.2 0" static-body geometry="primitive: plane; width: 1000; height: 1000;" rotation="-90 0 0" position="0 -0.2 0" material="src: #grid; repeat: 400 400; metalness:0.0; roughness: 1;" shadow="cast: false;"></a-entity>
-		<a-entity id="mat" position="0 -0.2 0" geometry="primitive: circle; radius: 7;" material="color: firebrick; metalness: 0; roughness: 0.8; depthTest: false;" rotation="-90 0 0" shadow="cast: false;"></a-entity>
+		<a-sky src="#sunset" rotation="0 270 0" material="fog: false; depthTest: false;"></a-sky>
 
 		<a-entity id="avatar-container"></a-entity>
 
 		<a-entity id="camera-wrapper">
-			<a-camera user-height="0"></a-camera>
+			<a-camera user-height="0" wasd-controls update-on-environment></a-camera>
 		</a-entity>
 
 		<script>
@@ -56,58 +62,26 @@
 				var cameraWrapper = document.getElementById('camera-wrapper');
 				cameraWrapper.setAttribute('position', '0 3.2 -8');
 				cameraWrapper.setAttribute('rotation', '0 180 0');
+			} else {
+
+				// Otherwise make the camera fall.
+				document.querySelector('a-camera').setAttribute('place-on-ground', "floor: #floor, #floor2; height: 1.4;");
 			}
 		</script>
 
 		<!-- environment stuff goes here -->
-		<a-entity id="stage" environment="environment-stage">
+		<a-entity id="stage" environment="environment-desert">
 		</a-entity>
 
 	</a-scene>
 
-	<script>
-		var stage = document.getElementById('stage');
-		var scene = document.querySelector('a-scene');
-
-		scene.addEventListener('loaded', function() {
-			var RAD2DEG = 180 / Math.PI;
-			var registerPositionFn = stage.components.environment.registerPositionFn;
-
-			function cylindricalToCartesian(phi, h, r) {
-				return {
-					x: r * Math.cos(phi),
-					y: h,
-					z: r * Math.sin(phi)
-				};
-			}
-
-			// for setting the camera positions on the stage layout
-			registerPositionFn('environment-stage', function stage(el, mode, id) {
-
-				const cols = 12;
-				const angle = 12;
-				const row = Math.floor(id / cols);
-
-				// radians
-				const pos = cylindricalToCartesian(
-					(220 + (id % cols) * angle) / RAD2DEG,
-					2.6 + row * 2,
-					(5 + row) * 2
-				);
-
-				if (mode === 'guest') {
-					el.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
-					el.setAttribute('rotation', '0 180 0');
-				}
-				if (mode === 'speaker') {
-					el.setAttribute('position', '3 2.2 0');
-				}
-			});
-		});
-	</script>
-
-	<!-- this contains the contents for the environment compnent -->
+	<!-- 
+		Environment I used for London Web Perf
+	 -->
 	<script id="environment-stage" type="text/html">
+		<a-entity id="floor" position="0 -0.2 0" static-body geometry="primitive: plane; width: 1000; height: 1000;" rotation="-90 0 0" position="0 -0.2 0" material="src: #grid; repeat: 400 400; metalness:0.0; roughness: 1;" shadow="cast: false;"></a-entity>
+		<a-entity id="mat" position="0 -0.2 0" geometry="primitive: circle; radius: 7;" material="color: firebrick; metalness: 0; roughness: 0.8;" rotation="-90 0 0" shadow="cast: false;"></a-entity>
+	
 		<a-entity text-geometry="value: WebVR; font: #samsung;" material="color: white;" position="4.5 5 3" rotation="0 180 0" scale="6 6 6"></a-entity>
 		<a-entity position="2 8.85 2.57" scale="1.2 1.2 1.2" rotation="0 180 -9">
 			<a-entity text-geometry="value: Ada's; font: #dawning; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;"></a-entity>
@@ -128,10 +102,28 @@
 		</a-entity>
 	</script>
 
-	<script src="scripts/avatars.js"></script>
-	<script src="scripts/websockets.js"></script>
-	<script src="build/slides.js"></script>
-	<script src="build/main.js"></script>
+
+	<!--
+		Environment for CSS Day
+	-->
+	<script id="environment-desert" type="text/html">
+
+		<a-entity id="floor" obj-model="obj: #dune-obj;" material="src: #grid; repeat: 40 40; metalness:0.0; roughness: 1;" scale="2.05 1 2.05" shadow="cast: false;"></a-entity>
+		<a-entity id="floor2" obj-model="obj: #dune-horizon-obj;" material="src: #grid; repeat: 200 200; metalness:0.0; roughness: 1;" scale="2 1 2" shadow="cast: false;"></a-entity>
+
+		<a-ocean-plane material="normalMap: #water-normal; sphericalEnvMap: #sunset; normalTextureRepeat: 5 5;" geometry="width: 100; height: 100;"></a-ocean-plane>
+
+		<a-entity rotation="0 90 0" position="-18.77 0.9 3.240" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;"></a-entity>
+
+		<!-- stuff injected via websockets -->
+		<a-entity class='slide-target' rotation="0 180 0">
+		</a-entity>
+	</script>
+
+	<script src="/scripts/avatar-position-functions.js"></script>
+	<script src="/scripts/websockets.js"></script>
+	<script src="/build/slides.js"></script>
+	<script src="/build/main.js"></script>
 </body>
 
 </html>

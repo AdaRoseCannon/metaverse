@@ -30,6 +30,12 @@ window.AFRAME.registerComponent('environment', {
 		// Update the component's setPosition function to allow listeners to use it
 		this.setPosition = startingPositions[this.data] || function () {};
 
+		Array.from(document.querySelectorAll('[update-on-environment]')).forEach(function (el) {
+			Object.keys(el.components).forEach(function (component) {
+				el.components[component].update(el.components[component].data);
+			});
+		});
+
 		this.el.emit('environment-update');
 	}
 });
