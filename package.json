@@ -20,6 +20,9 @@
 		"start": "node .",
 		"watch": "nodemon -w ./static/scripts -e es6 -x 'npm run build'"
 	},
+	"engines": {
+		"node": "7.1.0"
+	},
 	"author": "",
 	"license": "MIT",
 	"eslintConfig": {
