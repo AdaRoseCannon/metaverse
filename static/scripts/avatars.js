@@ -62,11 +62,45 @@ AFRAME.registerComponent('student-model', {
 			this.data.color2 = 'hsl(' + Math.random() * 360 + ', 100%, 80%)';
 		}
 		if (this.hasLoaded) {
+			var oldMat = this.el.object3D.children[0].children[0].material;
+			this.el.object3D.children[0].children[0].material = new THREE.MeshBasicMaterial();
 			this.el.object3D.children[0].children[0].material.color = new THREE.Color(this.data.color1);
+			this.el.object3D.children[0].children[0].material.map = oldMat.map;
+			this.el.object3D.children[0].children[0].material.fog = false;
+		
 			this.el.object3D.children[0].children[1].material.color = new THREE.Color(this.data.color2);
 		}
 	}
 });
+
+AFRAME.registerComponent('clone', {
+	schema: {
+		type: 'selector'
+	},
+
+	init: function () {
+		this.updateFn = this.update.bind(this);
+	},
+
+	update: function () {
+		if (!this.data.getObject3D('mesh')) {
+			this.data.addEventListener('model-loaded', this.updateFn);
+			return;
+		}
+		this.remove();
+		var cloneGeom = this.data.getObject3D('mesh').clone(true);
+		cloneGeom.visible = true;
+		this.el.setObject3D('clone', cloneGeom);
+		this.oldEl = this.data;
+		this.el.emit('model-loaded');
+	},
+
+	remove: function () {
+		if (this.oldEl) { this.oldEl.removeEventListener('model-loaded', this.updateFn); }
+		if (this.el.getObject3D('clone')) this.el.removeObject3D('clone');
+	}
+});
+
 
 AFRAME.registerComponent('place-on-ground', {
 	schema: {

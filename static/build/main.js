@@ -36,7 +36,7 @@ var constants = {
 	var miscMap = {
 		'speaker': 1,
 		'celebrate': 2,
-		'example2': 4,
+		'talk': 4,
 		'example3': 8,
 		'example4': 16,
 		'example5': 32,
@@ -84,6 +84,13 @@ var constants = {
 
 				// trigger id update to update position
 				self.updateState({ id: state[0] });
+
+				for (var id = 0; id < 100; id++) {
+					var avatar = makeAvatarEl(id);
+					stage.components.environment.setPosition(avatar, 'guest', id);
+					avatar.setAttribute('rotation', '0 180 0');
+					avatarContainer.appendChild(avatar);
+				}
 			});
 
 			ws.addEventListener('message', function m(e) {
@@ -134,7 +141,7 @@ var constants = {
 						if (Number(avatar.dataset.misc || 0) !== misc) {
 							if (getMiscState(misc, 'speaker')) {
 								avatar.removeChild(avatar.body);
-								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="0.2 0.2 0.2"></a-entity>');
+								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="0.4 0.4 0.4"></a-entity>');
 								avatar.body = avatar.firstChild;
 							}
 							avatar.dataset.misc = misc;
@@ -180,7 +187,9 @@ var constants = {
 					stage.components.environment.setPosition(cameraWrapper, mode, id);
 				}
 
-				if (mode === 'speaker') this.setMiscState('speaker', true);
+				if (mode === 'speaker') {
+					this.setMiscState('speaker', true);
+				}
 			}
 			if (position) state[1] = Math.floor(position.x * SCALE + MIDDLE);
 			if (position) state[2] = Math.floor(position.y * SCALE + MIDDLE);
@@ -192,17 +201,45 @@ var constants = {
 		}
 	});
 
-	var avatarGen = function avatarGen(color) {
-		return '<a-entity>\n        <a-entity obj-model="obj: #student-obj; mtl: #student-mtl" student-model scale="0.4 0.4 0.4" shadow="receive: false;" position="0 -1.2 -0.5"></a-entity>\n\t\t<a-animation attribute="rotation" from="0 -720 0" to="0 0 0" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" from="0 0 0" fill="backwards" to="1 1 1" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000"></a-animation>\n\t\t</a-sphere>\n\t\t<a-sphere position="0 0 0" scale="0 0 0" class="avatar-boom" material="color: ' + color + '; side: back; shader: flat; transparent: true;">\n\t\t\t<a-animation fill="none" attribute="scale" to="20 20 20" dur="4000" delay="0.3"></a-animation>\n\t\t\t<a-animation attribute="material.opacity" to="0" dur="3000" delay="0.3"></a-animation>\n\t\t</a-sphere>\n\t</a-entity>';
-	};
+	var avatarTemplate = '<a-entity clone="#avatar-clone-target" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">\n\t\t<!--<a-animation attribute="rotation" from="0 -720 0" fill="backwards" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale"    from="0 0 0"    fill="backwards" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>-->\n\t</a-entity>';
 
 	function makeAvatarEl(id) {
-		return document.createRange().createContextualFragment(avatarGen('hsl(' + id * 137.5 % 360 + ',80%,60%)')).firstElementChild;
-	}
+		var el = document.createRange().createContextualFragment(avatarTemplate).firstElementChild;
+		el.addEventListener('model-loaded', function () {
+			var mask = el.getObject3D('clone').children[0];
+			mask.material = mask.material.clone();
+			mask.material.color.set('hsl(' + id * 137.5 % 360 + ',80%,60%)');
 
-	// for (let id = 0; id < 100; id++) {
-	// 	const avatar = makeAvatarEl(id);
-	// 	setPosition(avatar, id);
-	// 	avatarContainer.appendChild(avatar);
-	// }
+			var hood = el.getObject3D('clone').children[1];
+			hood.material = hood.material.clone();
+			hood.material.color.set('hsl(' + (id * 137.5 + 100) % 360 + ',80%,60%)');
+		});
+		return el;
+	}
 })(undefined || window);
+
+// var points = [];
+// window.addEventListener('click', function (event) {
+// 	var raycaster = new THREE.Raycaster();
+// 	var mouse = new THREE.Vector2();
+// 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+// 	mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+// 	var scene = document.querySelector('a-scene');
+// 	var camera = scene.camera;
+
+// 	// update the picking ray with the camera and mouse position
+// 	raycaster.setFromCamera(mouse, camera);
+
+// 	// calculate objects intersecting the picking ray
+// 	var intersects = raycaster.intersectObject(document.querySelector('#floor').object3D, true);
+
+// 	if (intersects[0]) {
+// 		const p = intersects[0].point;
+// 		scene.insertAdjacentHTML('afterbegin', `<a-sphere position="${p.x} ${p.y} ${p.z}"></a-sphere>`)
+// 		points.push(p.x);
+// 		points.push(p.y);
+// 		points.push(p.z);
+// 		console.log(points);
+// 		console.log(points.length/3);
+// 	}
+// })

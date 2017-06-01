@@ -24,7 +24,7 @@
 		Camera
 		container for the environemnt
 	-->
-	<a-scene physics="debug: false; friction: 0.1; restitution: 0.25;" fog="color: #0e1734; density: 0.02; type: exponential">
+	<a-scene physics="friction: 0.1; restitution: 0.25;" fog="color: #0e1734; density: 0.02; type: exponential">
 		<a-assets>
 			<img id="sky" src="images/sky.jpg"></img>
 			<img id="pink" src="images/pink.jpg"></img>
@@ -49,7 +49,9 @@
 			<img id="water-normal" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/waternormals.jpg" crossorigin="anonymous" />
 		</a-assets>
 
-		<a-sky src="#sunset" rotation="0 270 0" material="fog: false; depthTest: false;"></a-sky>
+		<a-sky src="#sunset" rotation="0 90 0" material="fog: false; depthTest: false;"></a-sky>
+
+		<a-entity id="avatar-clone-target" visible="false" obj-model="obj: #student-obj; mtl: #student-mtl" student-model></a-entity>
 
 		<a-entity id="avatar-container"></a-entity>
 
@@ -62,10 +64,11 @@
 				var cameraWrapper = document.getElementById('camera-wrapper');
 				cameraWrapper.setAttribute('position', '0 3.2 -8');
 				cameraWrapper.setAttribute('rotation', '0 180 0');
+				cameraWrapper.firstElementChild.setAttribute('wasd-controls', 'fly:true;');
 			} else {
 
 				// Otherwise make the camera fall.
-				document.querySelector('a-camera').setAttribute('place-on-ground', "floor: #floor, #floor2; height: 1.4;");
+				document.querySelector('a-camera').setAttribute('place-on-ground', "floor: #floor; height: 1.4;");
 			}
 		</script>
 
@@ -108,19 +111,27 @@
 	-->
 	<script id="environment-desert" type="text/html">
 
-		<a-entity id="floor" obj-model="obj: #dune-obj;" material="src: #grid; repeat: 40 40; metalness:0.0; roughness: 1;" scale="2.05 1 2.05" shadow="cast: false;"></a-entity>
-		<a-entity id="floor2" obj-model="obj: #dune-horizon-obj;" material="src: #grid; repeat: 200 200; metalness:0.0; roughness: 1;" scale="2 1 2" shadow="cast: false;"></a-entity>
+		<a-entity id="floor" rotation="0 -90 0" scale="2 2 2" position="0 0 13">
+			<a-entity obj-model="obj: #dune-obj;" material="src: #grid; repeat: 40 40; metalness:0.0; roughness: 1; color: hsl(60,60%,80%);"  shadow="cast: false;" scale="1.05 1 1.05"></a-entity>
+			<a-entity rotation="0 90 0" obj-model="obj: #dune-horizon-obj;" material="src: #grid; repeat: 200 200; metalness:0.0; roughness: 1;color: hsl(60,60%,80%);" shadow="cast: false;"></a-entity>
+		</a-entity>
 
 		<a-ocean-plane material="normalMap: #water-normal; sphericalEnvMap: #sunset; normalTextureRepeat: 5 5;" geometry="width: 100; height: 100;"></a-ocean-plane>
 
-		<a-entity rotation="0 90 0" position="-18.77 10.9 15.240" scale="5 5 5" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;"></a-entity>
+		<a-entity position="-18.77 10.9 0.240" scale="5 5 5" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
 
 		<!-- stuff injected via websockets -->
 		<a-entity class='slide-target' rotation="0 180 0">
 		</a-entity>
+
+		<a-entity light="type:ambient;intensity:0.6;"></a-entity>
+		<a-entity light="intensity:2;color:hsl(35, 100%, 80%);castShadow:true;" position="-8 2 8.5"></a-entity>
+
+		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:6.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;" position="0 15 -8">
+			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
+		</a-entity>
 	</script>
 
-	<script src="/scripts/avatar-position-functions.js"></script>
 	<script src="/scripts/websockets.js"></script>
 	<script src="/build/slides.js"></script>
 	<script src="/build/main.js"></script>
