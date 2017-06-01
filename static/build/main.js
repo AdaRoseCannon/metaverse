@@ -129,8 +129,6 @@ var constants = {
 							avatar = makeAvatarEl(id);
 							console.log('Creating new Avatar', id);
 
-							avatar.body = avatar.firstElementChild;
-
 							avatars.set(id, avatar);
 
 							avatarContainer.appendChild(avatar);
@@ -140,9 +138,8 @@ var constants = {
 
 						if (Number(avatar.dataset.misc || 0) !== misc) {
 							if (getMiscState(misc, 'speaker')) {
-								avatar.removeChild(avatar.body);
-								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="0.4 0.4 0.4"></a-entity>');
-								avatar.body = avatar.firstChild;
+								avatar.removeAttribute('clone');
+								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="1.5 1.5 1.5"></a-entity>');
 							}
 							avatar.dataset.misc = misc;
 						}

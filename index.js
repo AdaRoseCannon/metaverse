@@ -46,7 +46,8 @@ wss.on('connection', function connection(ws) {
 			data = message.match(/^ENVIRONMENT:([\s\S]+)/);
 			if (data) currentEnvironment = data[1];
 
-			wss.clients.forEach(function (ws) {
+
+			for (const ws of wss.clients) {
 
 				ws.send(message, function (e) {
 					if (e) {
@@ -54,7 +55,7 @@ wss.on('connection', function connection(ws) {
 						console.log('Oh no! ' + Date.now());
 					}
 				});
-			});
+			};
 		} else {
 			ws.buffer = message;
 		}
@@ -75,10 +76,10 @@ const presentIds = [];
 setInterval(function () {
 	// empty ids;
 	presentIds.splice(0);
-	const arr = wss.clients.map(s => s.buffer).filter(a => !!a);
-	const length = wss.clients.length * 8 * 4;
+	const arr = Array.from(wss.clients).map(s => s.buffer).filter(a => !!a);
+	const length = wss.clients.size * 8 * 4;
 	const data = Buffer.concat(arr, length);
-	wss.clients.forEach(function (ws) {
+	for (const ws of wss.clients) {
 		presentIds.push(ws.id);
 		ws.send(data, function (e) {
 			if (e) {
@@ -86,7 +87,7 @@ setInterval(function () {
 				console.log('Oh no! ' + Date.now());
 			}
 		})
-	});
+	};
 
 	// find unused ids to allow users to leave and join in the same slot
 	for (let i = 1, l = ids.length; i < l; i++) {
