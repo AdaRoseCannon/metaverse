@@ -56,6 +56,10 @@ window.AFRAME.registerComponent('environment', {
 	schema: {
 		default : ''
 	},
+	init() {
+		this.callbacks = {};
+		this.el.emit('init');
+	},
 	update() {
 		if (this.oldData === this.data) return;
 		this.oldData = this.data;
@@ -79,6 +83,13 @@ window.AFRAME.registerComponent('environment', {
 			});
 		});
 
+		if (this.callbacks[this.data]) {
+			this.callbacks[this.data].bind(this.el)();
+		}
+
 		this.el.emit('environment-update');
+	},
+	registerCallback(name, fn) {
+		this.callbacks[name] = fn;
 	}
 });

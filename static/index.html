@@ -62,8 +62,8 @@
 		<script>
 			if (location.search === '?watcher') {
 				var cameraWrapper = document.getElementById('camera-wrapper');
-				cameraWrapper.setAttribute('position', '0 3.2 -8');
-				cameraWrapper.setAttribute('rotation', '0 180 0');
+				cameraWrapper.setAttribute('position', '0 5 8');
+				cameraWrapper.setAttribute('rotation', '0 0 0');
 				cameraWrapper.firstElementChild.setAttribute('wasd-controls', 'fly:true;');
 			} else {
 
@@ -121,15 +121,41 @@
 		<a-entity position="-18.77 10.9 0.240" scale="5 5 5" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
 
 		<!-- stuff injected via websockets -->
-		<a-entity class='slide-target' rotation="0 180 0">
+		<a-entity class='slide-target' rotation="0 180 0" position="0 2 0">
 		</a-entity>
 
-		<a-entity light="type:ambient;intensity:0.6;"></a-entity>
+		<a-entity light="type: ambient; intensity: 0.7; color: #90cef0"></a-entity>
 		<a-entity light="intensity:2;color:hsl(35, 100%, 80%);castShadow:true;" position="-8 2 8.5"></a-entity>
 
 		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:6.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;" position="0 15 -8">
 			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
 		</a-entity>
+
+		<!-- giant cube -->
+		<a-entity geometry="depth:50;height:50;width:50" rotation="45 120 45" position="-70 45 -35" material=""></a-entity>
+
+		<a-entity position="12.675 2.1 -6.52" rotation="0 -45.95121516949202 0" scale="2.723 2.723 2.723">
+			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:blue" position="0.09128193718505119 0.3353260840852976 -0.2527772892276905" geometry="primitive:box" from-quaternion="-0.04930826627427826 0.07472182546268243 -0.00029114139116865077 0.9959845676079724"></a-box>
+			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:green" position="-1.2014946938015236 0.4324681350887012 -0.03990198252008523" geometry="primitive:box" from-quaternion="-0.04132853482197379 -0.002041902654166406 0.0015321922524533643 0.9991423498330563"></a-box>
+			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:yellow" position="1.1717785923713804 0.4990881759748613 -0.07418674100245877" geometry="primitive:box" from-quaternion="-0.08713510272811283 -0.018632682355620427 0.010066042683118438 0.9959713709768455"></a-box>
+			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:crimson" position="-0.819673191608328 1.5776525718958716 -0.7288151314900163" geometry="primitive:box" from-quaternion="0.1250695328347503 0.35362157578429526 -0.17553130853256688 0.9102187389969371"></a-box>
+			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:purple" position="1.0863344274224271 1.7759088594655816 -1.4276836118449854" geometry="primitive:box" from-quaternion="0.18490361878475225 -0.8060709098389282 0.2712525686842239 0.4924250034817038"></a-box>
+			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:orange" position="0.0528776170944858 2.5659173347837063 -0.10934310084876969" geometry="primitive:box" from-quaternion="0.340928361833158 0.21601586069333042 0.021954800585951638 0.9146709718570443"></a-box>
+			<a-sphere position="0.13317466951376203 1.2538894807155758 -1.8262106038030206" radius="0.5" material="color:#aaa;" geometry="primitive:sphere;radius:0.5" from-quaternion="-0.041668068115126175 0.040470506590720885 -0.010592534589388644 0.9982553322706653"></a-sphere>
+		</a-entity>
+	</script>
+
+	<script>
+		var env = document.querySelector('[environment]');
+		env.addEventListener('init', function () {
+			env.components.environment.registerCallback('environment-desert', function () {
+				this.querySelector('a-sphere').addEventListener('collide', function () {
+					setTimeout(function () {
+						AFRAME.scenes[0].systems.physics.tick = function () { };
+					}, 100)
+				});
+			});
+		});
 	</script>
 
 	<script src="/scripts/websockets.js"></script>

@@ -103,14 +103,14 @@
 </script>
 
 <script id="physics" type="text/html">
-<a-box material="color: blue;" dynamic-body position="0 0.4 0"></a-box>
-<a-box material="color: green;" dynamic-body position="-1.2 0.4 0"></a-box>
-<a-box material="color: yellow;" dynamic-body position="1.2 0.4 0"></a-box>
-<a-box material="color: crimson;" dynamic-body position="-0.55 1.5 0"></a-box>
-<a-box material="color: purple;" dynamic-body position="0.55 1.5 0"></a-box>
-<a-box material="color: orange;" dynamic-body position="0 2.6 0"></a-box>
-<a-sphere dynamic-body="mass: 20;" position="0 0.5 5" radius="0.5" velocity="0 3 15"></a-sphere>
-</script>
+<a-entity id="floor" position="0 -0.4 0" geometry="primitive: plane; width: 20; height: 20;" visible="false" rotation="-90 0 0" position="0 -0.2 0" static-body></a-entity>
+<a-box material="color: blue;" position="0 0.4 0" shadow="receive: false;" dynamic-body="mass:1;"></a-box>
+<a-box material="color: green;" position="-1.2 0.4 0" shadow="receive: false;" dynamic-body="mass:1;"></a-box>
+<a-box material="color: yellow;" position="1.2 0.4 0" shadow="receive: false;" dynamic-body="mass:1;"></a-box>
+<a-box material="color: crimson;" position="-0.55 1.5 0" shadow="receive: false;" dynamic-body="mass:1;"></a-box>
+<a-box material="color: purple;" position="0.55 1.5 0" shadow="receive: false;" dynamic-body="mass:1;"></a-box>
+<a-box material="color: orange;" position="0 2.6 0" shadow="receive: false;" dynamic-body="mass:1;"></a-box>
+<a-sphere position="0 0.5 -8" radius="0.5" velocity="0 3 -15" shadow="receive: false;" dynamic-body="mass: 20;"></a-sphere>
 </script>
 
 <script id="robot" type="text/html">

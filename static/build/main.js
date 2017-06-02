@@ -46,7 +46,15 @@ var constants = {
 
 	function getMiscState(miscState, name) {
 		if (!miscMap[name]) throw Error('No field ' + name);
-		return miscState & miscMap[name];
+		return !!(miscState & miscMap[name]);
+	}
+
+	function getMiscChanged(a, b) {
+		var keys = Object.keys(miscMap);
+		var diff = a ^ b;
+		return keys.filter(function (key) {
+			return diff & miscMap[key];
+		});
 	}
 
 	AFRAME.registerSystem('avatar-sync', {
@@ -74,6 +82,16 @@ var constants = {
 					});
 				}
 			}, constants.SYNC_INTERVAL);
+
+			var celebrate = function celebrate() {
+				_this.setMiscState('celebrate', true);
+				setTimeout(function () {
+					_this.setMiscState('celebrate', false);
+				}, 500);
+			};
+
+			window.addEventListener('touchstart', celebrate);
+			window.addEventListener('mousedown', celebrate);
 
 			var self = this;
 			this.webSocket = ws;
@@ -136,10 +154,16 @@ var constants = {
 							avatar = avatars.get(id);
 						}
 
-						if (Number(avatar.dataset.misc || 0) !== misc) {
-							if (getMiscState(misc, 'speaker')) {
+						var oldMisc = Number(avatar.dataset.misc || 0);
+						if (oldMisc !== misc) {
+							var changed = getMiscChanged(oldMisc, misc);
+							if (changed.includes('speaker') && getMiscState(misc, 'speaker')) {
 								avatar.removeAttribute('clone');
 								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="1.5 1.5 1.5"></a-entity>');
+							}
+							if (changed.includes('celebrate') && getMiscState(misc, 'celebrate')) {
+								console.log('celebrate');
+								avatar.emit('celebrate');
 							}
 							avatar.dataset.misc = misc;
 						}
@@ -198,7 +222,7 @@ var constants = {
 		}
 	});
 
-	var avatarTemplate = '<a-entity clone="#avatar-clone-target" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">\n\t\t<!--<a-animation attribute="rotation" from="0 -720 0" fill="backwards" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale"    from="0 0 0"    fill="backwards" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale" to="0 0 0" from="1 1 1" dur="1800" easing="ease-in-elastic" begin="remove"></a-animation>-->\n\t</a-entity>';
+	var avatarTemplate = '<a-entity clone="#avatar-clone-target" rotation="0 0 0" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">\n\t\t<a-animation attribute="rotation" from="0 -720 0" to="0 0 0"    fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale"    from="0 0 0" to="0.4 0.4 0.4" fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>\n\t\t<a-animation attribute="scale"    to="0 0 0"                    fill="forwards" dur="1800" easing="ease-in-elastic"  begin="remove"></a-animation>\n\t\t<a-animation attribute="scale"    from="0.4 0.4 0.4" to="0.6 0.6 0.6" dur="300" easing="ease-out"  begin="celebrate"></a-animation>\n\t\t<a-animation attribute="scale"    to="0.4 0.4 0.4"  from="0.6 0.6 0.6" delay="350" dur="300" easing="ease-out" begin="celebrate"></a-animation>\n\t</a-entity>';
 
 	function makeAvatarEl(id) {
 		var el = document.createRange().createContextualFragment(avatarTemplate).firstElementChild;

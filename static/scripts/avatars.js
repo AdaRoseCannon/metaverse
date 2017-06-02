@@ -101,6 +101,16 @@ AFRAME.registerComponent('clone', {
 	}
 });
 
+AFRAME.registerComponent('from-quaternion', {
+	schema: {
+		type: 'vec4'
+	},
+	update: function () {
+		var data = this.data;
+		this.el.object3D.quaternion.set(data.x, data.y, data.z, data.w);
+	}
+})
+
 
 AFRAME.registerComponent('place-on-ground', {
 	schema: {
