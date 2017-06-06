@@ -39,6 +39,7 @@ registerPositionFn('environment-stage', function stage(el, mode, id) {
 
 // for setting the camera positions on the desert layout
 registerPositionFn('environment-desert', function (el, mode, id) {
+	if (!seats[id * 3]) return;
 	el.setAttribute('position', seats[id * 3] + ' ' + seats[id * 3 + 1] + ' ' + seats[id * 3 + 2]);
 	if (mode === 'speaker') {
 		el.setAttribute('rotation', '0 180 0');

@@ -101,9 +101,10 @@ const constants = {
 				// trigger id update to update position
 				self.updateState({ id: state[0] });
 
-				for (let id = 0; id < 100; id++) {
+				for (let id = 0; id < 300; id++) {
 					const avatar = makeAvatarEl(id);
 					stage.components.environment.setPosition(avatar, 'guest', id);
+					avatar.firstElementChild.setAttribute('position', '0 0.2 0');
 					avatar.setAttribute('rotation', '0 180 0');
 					avatarContainer.appendChild(avatar);
 				}
@@ -125,7 +126,6 @@ const constants = {
 						if (counter) {
 							counter.setAttribute('text-geometry', 'value', count);
 							this.count = count;
-							console.log(e.data.byteLength);
 						}
 					}
 
@@ -153,6 +153,7 @@ const constants = {
 
 						if (!avatars.has(id)) {
 							avatar = makeAvatarEl(id);
+							avatar.avatarBody = avatar.firstElementChild;
 							console.log('Creating new Avatar', id);
 
 							avatars.set(id, avatar);
@@ -166,12 +167,11 @@ const constants = {
 						if (oldMisc !== misc) {
 							const changed = getMiscChanged(oldMisc, misc);
 							if (changed.includes('speaker') && getMiscState(misc, 'speaker')) {
-								avatar.removeAttribute('clone');
-								avatar.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="1.5 1.5 1.5"></a-entity>');
+								avatar.avatarBody.removeAttribute('clone');
+								avatar.avatarBody.insertAdjacentHTML('afterbegin', '<a-entity obj-model="obj: #ada-obj; mtl: #ada-mtl" ada-model scale="1.5 1.5 1.5" shadow="receive: false;"></a-entity>');
 							}
 							if (changed.includes('celebrate') && getMiscState(misc, 'celebrate')) {
-								console.log('celebrate');
-								avatar.emit('celebrate');
+								avatar.avatarBody.emit('celebrate');
 							}
 							avatar.dataset.misc = misc;
 						}
@@ -226,22 +226,25 @@ const constants = {
 		}
 	});
 
-	const avatarTemplate = `<a-entity clone="#avatar-clone-target" rotation="0 0 0" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">
+	const avatarTemplate = `<a-entity><a-entity clone="#avatar-clone-target" rotation="0 0 0" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">
 		<a-animation attribute="rotation" from="0 -720 0" to="0 0 0"    fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 		<a-animation attribute="scale"    from="0 0 0" to="0.4 0.4 0.4" fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 		<a-animation attribute="scale"    to="0 0 0"                    fill="forwards" dur="1800" easing="ease-in-elastic"  begin="remove"></a-animation>
 		<a-animation attribute="scale"    from="0.4 0.4 0.4" to="0.6 0.6 0.6" dur="300" easing="ease-out"  begin="celebrate"></a-animation>
 		<a-animation attribute="scale"    to="0.4 0.4 0.4"  from="0.6 0.6 0.6" delay="350" dur="300" easing="ease-out" begin="celebrate"></a-animation>
-	</a-entity>`;
+	</a-entity></a-entity>`;
 
 	function makeAvatarEl(id) {
 		const el = document.createRange().createContextualFragment(avatarTemplate).firstElementChild;
 		el.addEventListener('model-loaded', function () {
-			const mask = el.getObject3D('clone').children[0];
+			const clone = el.firstElementChild.getObject3D('clone');
+			if (!clone) return;
+
+			const mask = clone.children[0];
 			mask.material = mask.material.clone();
 			mask.material.color.set('hsl(' + (id * 137.5) % 360 + ',80%,60%)');
 
-			const hood = el.getObject3D('clone').children[1];
+			const hood = clone.children[1];
 			hood.material = hood.material.clone();
 			hood.material.color.set('hsl(' + (id * 137.5 + 100) % 360 + ',80%,60%)');
 		});
