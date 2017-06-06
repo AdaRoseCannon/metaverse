@@ -121,6 +121,16 @@ var constants = {
 					if (!e.data.byteLength) return;
 					var d = new Uint16Array(e.data);
 					var tickOff = new Set(avatars.keys());
+					var count = d.length / length;
+					if (count !== this.count) {
+						var counter = document.getElementById('counter');
+						if (counter) {
+							counter.setAttribute('text-geometry', 'value', count);
+							this.count = count;
+							console.log(e.data.byteLength);
+						}
+					}
+
 					for (var i = 0, l = d.length; i < l; i += length) {
 
 						// Make sure all avatars are accounted for

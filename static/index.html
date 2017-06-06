@@ -68,7 +68,7 @@
 			} else {
 
 				// Otherwise make the camera fall.
-				document.querySelector('a-camera').setAttribute('place-on-ground', "floor: #floor; height: 1.4;");
+				document.querySelector('a-camera').setAttribute('place-on-ground', "floor: #floor; height: 1.4; min: 0;");
 			}
 		</script>
 
@@ -116,19 +116,21 @@
 			<a-entity rotation="0 90 0" obj-model="obj: #dune-horizon-obj;" material="src: #grid; repeat: 200 200; metalness:0.0; roughness: 1;color: hsl(60,60%,80%);" shadow="cast: false;"></a-entity>
 		</a-entity>
 
+		<a-entity id="counter" text-geometry="value:0;font:#samsung;size:3;height:1" position="-4.201 1.711 -3.465" material="color:lavenderblush" rotation="0 38.78924273035673 0" shadow></a-entity>
+
 		<a-ocean-plane material="normalMap: #water-normal; sphericalEnvMap: #sunset; normalTextureRepeat: 5 5;" geometry="width: 100; height: 100;"></a-ocean-plane>
 
 		<a-entity position="-18.77 10.9 0.240" scale="5 5 5" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
 
 		<!-- stuff injected via websockets -->
-		<a-entity class='slide-target' rotation="0 180 0" position="0 2 0">
+		<a-entity class='slide-target' shadow="receive:false;" position="0 1.8 0">
 		</a-entity>
 
-		<a-entity light="type: ambient; intensity: 0.7; color: #90cef0"></a-entity>
-		<a-entity light="intensity:2;color:hsl(35, 100%, 80%);castShadow:true;" position="-8 2 8.5"></a-entity>
+		<a-entity light="type: ambient; intensity: 0.4; color: #90cef0"></a-entity>
+		<a-entity light="intensity:1;color:hsl(35, 100%, 80%);castShadow:true;" position="8 5 8.5"></a-entity>
 
-		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:6.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;" position="0 15 -8">
-			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
+		<a-entity  position="0 15 8" light="angle:30.4;decay:1.04;distance:20.02;intensity:3.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;">
+			<a-animation fill="forward" attribute="rotation" from="-120 0 0" to="-42 0 0" dur="6000" delay="2000"></a-animation>
 		</a-entity>
 
 		<!-- giant cube -->

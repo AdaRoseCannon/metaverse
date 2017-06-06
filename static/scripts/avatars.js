@@ -4,13 +4,16 @@
 AFRAME.registerComponent('ada-model', {
 	schema: {
 		mouth: {
-			default: 0
+			default: '0'
 		},
 		eyes: {
-			default: 0
+			default: '0'
 		}
 	},
 	init: function() {
+
+		this.intervals = [];
+
 		this.el.addEventListener('model-loaded', function() {
 
 			//Mouth 
@@ -25,15 +28,34 @@ AFRAME.registerComponent('ada-model', {
 			this.el.object3D.children[0].children[3].material.side = THREE.DoubleSide;
 
 			// The head
-			this.el.object3D.children[0].children[0].castShadow = true;
 			this.el.object3D.children[0].children[0].material.needsUpdate = true;
 			this.update();
 		}.bind(this));
 	},
 
 	update: function() {
-		if (this.mouth) this.mouth.material.map.offset.y = this.data.mouth / 7;
-		if (this.eyes) this.eyes.material.map.offset.y = this.data.eyes / 4;
+		this.remove();
+		if (!this.eyes || !this.mouth) return;
+		if (this.data.mouth === 'anim') {
+			this.intervals.push(setInterval(function () {
+				this.mouth.material.map.offset.y = Math.floor(7 * Math.random()) / 7;
+			}.bind(this), 200));
+		} else {
+			this.mouth.material.map.offset.y = Number(this.data.mouth) / 7;
+		}
+		if (this.data.eyes === 'anim') {
+			this.intervals.push(setInterval(function () {
+				this.eyes.material.map.offset.y = Math.floor(4 * Math.random()) / 4;
+			}.bind(this), 1000));
+		} else {
+			this.eyes.material.map.offset.y = Number(this.data.eyes) / 4;
+		}
+	},
+
+	remove: function () {
+		this.intervals.splice(0).forEach(function (i) {
+			clearInterval(i);
+		});
 	}
 });
 

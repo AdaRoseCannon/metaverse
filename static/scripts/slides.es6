@@ -4,6 +4,7 @@
 'use strict';
 
 const ws = window.webSocketConnection;
+window.currentSlideHTML = '';
 
 ws.addEventListener('message', function m(e) {
 	if (typeof e.data !== 'string') return;
@@ -19,12 +20,14 @@ ws.addEventListener('message', function m(e) {
 	if (data) {
 		for (const contentHole of contentHoles) contentHole.innerHTML = data[1];
 		for (const textHole of textHoles) textHole.textContent = data[1];
+		window.currentSlideHTML = data[1];
 		return;
 	};
 
 	data = e.data.match(/^SLIDE:(.+)<=([\s\S]+)/);
 	if (data) {
 		for (const contentHole of contentHoles) contentHole.querySelector(data[1]).innerHTML = data[2];
+		window.currentSlideHTML = contentHoles[0].innerHTML;
 		return;
 	};
 
@@ -37,10 +40,10 @@ ws.addEventListener('message', function m(e) {
 	data = e.data.match(/^APPEND:([\s\S]+)/);
 	if (data) {
 		for (const contentHole of contentHoles) {
-			const result = document.createRange().createContextualFragment(data[1]);
-			while (result.firstElementChild) contentHole.appendChild(result.firstElementChild);
+			contentHole.insertAdjacentHTML('beforeend', data[1]);
 		}
 		for (const textHole of textHoles) textHole.textContent += data[1];
+		window.currentSlideHTML += data;
 		return;
 	};
 
@@ -48,6 +51,14 @@ ws.addEventListener('message', function m(e) {
 	if (data && sky) {
 		sky.setAttribute('material', `src: ${data[1]}; fog: false; depthTest: false; shader: flat;`);
 	};
+});
+
+window.addEventListener('DOMContentLoaded', function () {
+	var stage = document.getElementById('stage');
+	if (stage) stage.addEventListener('environment-update', function () {
+		const contentHoles = Array.from(document.querySelectorAll('.slide-target'));
+		for (const contentHole of contentHoles) contentHole.innerHTML = window.currentSlideHTML;
+	});
 });
 
 /**
@@ -64,7 +75,7 @@ if (document.getElementById('code')) (function () {
 				value: ''
 			}
 		);
-		editor.getDoc().setValue(datums[select.value]);
+		editor.getDoc().setValue(window.currentSlideHTML || datums[select.value]);
 	};
 
 	function submit() {
