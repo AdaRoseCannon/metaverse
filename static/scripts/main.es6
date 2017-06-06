@@ -1,7 +1,6 @@
 /* eslint-env es6 */
 /* eslint no-console: 0 */
 
-
 const constants = {
 	SYNC_INTERVAL: 32
 };
