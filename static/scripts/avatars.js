@@ -141,6 +141,9 @@ AFRAME.registerComponent('place-on-ground', {
 		},
 		height: {
 			default: 0
+		},
+		min: {
+			default: -Infinity
 		}
 	},
 	init: function () {
@@ -171,6 +174,7 @@ AFRAME.registerComponent('place-on-ground', {
 		}
 		if (result && result[0]) {
 			pos.y -= Math.max(result[0].distance - offset, 0.1);
+			if (pos.y <= this.data.min) pos.y = this.data.min;
 			pos.y += this.data.height;
 			this.el.object3D.position.set(pos.x, pos.y, pos.z);
 			this.el.setAttribute('position', pos);
