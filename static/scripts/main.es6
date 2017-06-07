@@ -101,13 +101,13 @@ const constants = {
 				// trigger id update to update position
 				self.updateState({ id: state[0] });
 
-				for (let id = 0; id < 300; id++) {
-					const avatar = makeAvatarEl(id);
-					stage.components.environment.setPosition(avatar, 'guest', id);
-					avatar.firstElementChild.setAttribute('position', '0 0.2 0');
-					avatar.setAttribute('rotation', '0 180 0');
-					avatarContainer.appendChild(avatar);
-				}
+				// for (let id = 0; id < 300; id++) {
+				// 	const avatar = makeAvatarEl(id);
+				// 	stage.components.environment.setPosition(avatar, 'guest', id);
+				// 	avatar.firstElementChild.setAttribute('position', '0 0.2 0');
+				// 	avatar.setAttribute('rotation', '0 180 0');
+				// 	avatarContainer.appendChild(avatar);
+				// }
 			});
 
 			ws.addEventListener('message', function m(e) {

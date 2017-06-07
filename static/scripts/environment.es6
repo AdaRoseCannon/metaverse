@@ -43,11 +43,10 @@ registerPositionFn('environment-stage', function stage(el, mode, id) {
 
 // for setting the camera positions on the desert layout
 registerPositionFn('environment-desert', function (el, mode, id) {
-	if (!seats[id * 3]) return;
-	el.setAttribute('position', seats[id * 3] + ' ' + seats[id * 3 + 1] + ' ' + seats[id * 3 + 2]);
+	el.setAttribute('position', seats[((id * 3) % seats.length)] + ' ' + seats[((id * 3) % seats.length) + 1] + ' ' + seats[((id * 3) % seats.length) + 2]);
 	if (mode === 'speaker') {
 		el.setAttribute('rotation', '0 180 0');
-		el.setAttribute('position', '3 0 0');
+		el.setAttribute('position', '5 0 -3.4');
 	}
 });
 
