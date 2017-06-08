@@ -226,13 +226,15 @@ const constants = {
 		}
 	});
 
-	const avatarTemplate = `<a-entity><a-entity clone="#avatar-clone-target" rotation="0 0 0" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">
-		<a-animation attribute="rotation" from="0 -720 0" to="0 0 0"    fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
+	const avatarTemplate = `<a-entity>
+		<a-entity clone="#avatar-clone-target" rotation="0 0 0" scale="0.4 0.4 0.4" position="0 -1.2 -0.5">
+			<a-animation attribute="position"    from="0 -1.2 -0.5" to="0 0 -0.5" dur="300" easing="ease-out"  begin="celebrate"></a-animation>
+			<a-animation attribute="position"    to="0 -1.2 -0.5"  from="0 0 -0.5" delay="350" dur="300" easing="ease-out" begin="celebrate"></a-animation>
+			<a-animation attribute="rotation" from="0 -720 0" to="0 0 0"    fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
+		</a-entity>
 		<a-animation attribute="scale"    from="0 0 0" to="0.4 0.4 0.4" fill="none" dur="2300" easing="ease-out-elastic" delay="1000"></a-animation>
 		<a-animation attribute="scale"    to="0 0 0"                    fill="forwards" dur="1800" easing="ease-in-elastic"  begin="remove"></a-animation>
-		<a-animation attribute="scale"    from="0.4 0.4 0.4" to="0.6 0.6 0.6" dur="300" easing="ease-out"  begin="celebrate"></a-animation>
-		<a-animation attribute="scale"    to="0.4 0.4 0.4"  from="0.6 0.6 0.6" delay="350" dur="300" easing="ease-out" begin="celebrate"></a-animation>
-	</a-entity></a-entity>`;
+	</a-entity>`;
 
 	function makeAvatarEl(id) {
 		const el = document.createRange().createContextualFragment(avatarTemplate).firstElementChild;
