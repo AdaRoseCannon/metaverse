@@ -9,6 +9,8 @@
 	<script src="https://unpkg.com/aframe-text-geometry-component/dist/aframe-text-geometry-component.min.js"></script>
 	<script src="build/environment.js"></script>
 	<script src="scripts/avatars.js"></script>
+	<script src="https://samsunginter.net/a-frame-components/dist/ocean-plane.js"></script>
+	<!-- Added for SVP demo -->
 	<script src="https://unpkg.com/aframe-extras.ocean@%5E3.5.x/dist/aframe-extras.ocean.min.js"></script>
 </head>
 
@@ -96,16 +98,14 @@
 		<a-entity light="color: #ffffff; intensity: 0.7; type: ambient;" visible=""></a-entity>
 		<a-entity light="color: #ffaaff; intensity: 1.5" position="15 5 5"></a-entity>
 		<a-entity light="color: #aaffaa; intensity: 0.7" position="-15 5 15"></a-entity>
-		
+
 		<!-- stuff injected via websockets -->
 		<a-entity class='slide-target' rotation="0 180 0">
 		</a-entity>
 
-		<!--
 		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:4.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;" position="0 15 -8">
 			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
 		</a-entity>
-		-->
 	</script>
 
 
@@ -122,8 +122,8 @@
 		<a-entity id="counter" text-geometry="value:0;font:#samsung;size:3;height:1" position="-4.201 1.711 -3.465" material="color:lavenderblush" rotation="0 38.78924273035673 0" shadow></a-entity>
 
 		<a-ocean-plane material="normalMap: #water-normal; sphericalEnvMap: #sunset; normalTextureRepeat: 5 5;" geometry="width: 100; height: 100;"></a-ocean-plane>
-		
-		<a-entity position="-18.77 10.9 -5" scale="5 5 5" text-geometry="value: Metaverse; font: #bungee; size: 0.8; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 3; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
+
+		<a-entity position="-18.77 10.9 0.240" scale="5 5 5" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
 
 		<!-- stuff injected via websockets -->
 		<a-entity class='slide-target' shadow="receive:false;" position="0 1.8 0">
@@ -189,6 +189,7 @@
 	</script>
 
 	<script>
+		/* Removed for SVP demo */
 		/*
 		var env = document.querySelector('[environment]');
 		env.addEventListener('init', function () {
