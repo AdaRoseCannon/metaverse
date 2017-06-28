@@ -93,22 +93,26 @@
 		</a-entity>
 
 		<a-entity material="color: grey; metalness: 0; roughness: 1; side: double;" obj-model="obj: #theatre;" rotation="0 160 0" scale="2 2 2"></a-entity>
+		<!--
 		<a-entity light="color: #ffffff; intensity: 0.7; type: ambient;" visible=""></a-entity>
 		<a-entity light="color: #ffaaff; intensity: 1.5" position="15 5 5"></a-entity>
 		<a-entity light="color: #aaffaa; intensity: 0.7" position="-15 5 15"></a-entity>
+		-->
 
 		<!-- stuff injected via websockets -->
 		<a-entity class='slide-target' rotation="0 180 0">
 		</a-entity>
 
-		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:4.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;" position="0 15 -8">
+		<!--
+		<a-entity light="angle:30.4;decay:1.04;distance:20.02;intensity:4.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:false;" position="0 15 -8">
 			<a-animation fill="forward" attribute="rotation" from="-180 0 0" to="-123 0 0" dur="6000"></a-animation>
 		</a-entity>
+		-->
 	</script>
 
 
 	<!--
-		Environment for CSS Day
+		Environment
 	-->
 	<script id="environment-desert" type="text/html">
 
@@ -119,20 +123,22 @@
 
 		<a-entity id="counter" text-geometry="value:0;font:#samsung;size:3;height:1" position="-4.201 1.711 -3.465" material="color:lavenderblush" rotation="0 38.78924273035673 0" shadow></a-entity>
 
-		<a-ocean-plane material="normalMap: #water-normal; sphericalEnvMap: #sunset; normalTextureRepeat: 5 5;" geometry="width: 100; height: 100;"></a-ocean-plane>
-
-		<a-entity position="-18.77 10.9 0.240" scale="5 5 5" text-geometry="value: CSS Day; font: #bungee; size: 1.4; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 12; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
+		<a-entity position="-18.77 10.9 -5" scale="5 5 5" text-geometry="value: Metaverse; font: #bungee; size: 0.8; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 3; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
 
 		<!-- stuff injected via websockets -->
 		<a-entity class='slide-target' shadow="receive:false;" position="0 1.8 0">
 		</a-entity>
 
+		<!--
 		<a-entity light="type: ambient; intensity: 0.4; color: #90cef0"></a-entity>
-		<a-entity light="intensity:1;color:hsl(35, 100%, 80%);castShadow:true;" position="8 5 8.5"></a-entity>
+		<a-entity light="intensity:1;color:hsl(35, 100%, 80%);castShadow:false;" position="8 5 8.5"></a-entity>
+		-->
 
+		<!--
 		<a-entity  position="0 15 8" light="angle:30.4;decay:1.04;distance:20.02;intensity:3.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;">
 			<a-animation fill="forward" attribute="rotation" from="-120 0 0" to="-42 0 0" dur="6000" delay="2000"></a-animation>
 		</a-entity>
+		-->
 
 		<!-- giant cube -->
 		<a-entity geometry="depth:50;height:50;width:50" rotation="45 120 45" position="-70 45 -35" material=""></a-entity>
@@ -144,11 +150,12 @@
 			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:crimson" position="-0.819673191608328 1.5776525718958716 -0.7288151314900163" geometry="primitive:box" from-quaternion="0.1250695328347503 0.35362157578429526 -0.17553130853256688 0.9102187389969371"></a-box>
 			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:purple" position="1.0863344274224271 1.7759088594655816 -1.4276836118449854" geometry="primitive:box" from-quaternion="0.18490361878475225 -0.8060709098389282 0.2712525686842239 0.4924250034817038"></a-box>
 			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:orange" position="0.0528776170944858 2.5659173347837063 -0.10934310084876969" geometry="primitive:box" from-quaternion="0.340928361833158 0.21601586069333042 0.021954800585951638 0.9146709718570443"></a-box>
-			<a-sphere position="0.13317466951376203 1.2538894807155758 -1.8262106038030206" radius="0.5" material="color:#aaa;" geometry="primitive:sphere;radius:0.5" from-quaternion="-0.041668068115126175 0.040470506590720885 -0.010592534589388644 0.9982553322706653"></a-sphere>
+			<!--<a-sphere position="0.13317466951376203 1.2538894807155758 -1.8262106038030206" radius="0.5" material="color:#aaa;" geometry="primitive:sphere;radius:0.5" from-quaternion="-0.041668068115126175 0.040470506590720885 -0.010592534589388644 0.9982553322706653"></a-sphere>-->
 		</a-entity>
 	</script>
 
 	<script>
+		/*
 		var env = document.querySelector('[environment]');
 		env.addEventListener('init', function () {
 			env.components.environment.registerCallback('environment-desert', function () {
@@ -159,6 +166,7 @@
 				});
 			});
 		});
+		*/
 	</script>
 
 	<script src="/scripts/websockets.js"></script>
