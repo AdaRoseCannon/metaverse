@@ -10,8 +10,6 @@
 	<script src="build/environment.js"></script>
 	<script src="scripts/avatars.js"></script>
 	<script src="https://samsunginter.net/a-frame-components/dist/ocean-plane.js"></script>
-	<!-- Added for SVP demo -->
-	<script src="https://unpkg.com/aframe-extras.ocean@%5E3.5.x/dist/aframe-extras.ocean.min.js"></script>
 </head>
 
 <body>
@@ -76,7 +74,7 @@
 		</script>
 
 		<!-- environment stuff goes here -->
-		<a-entity id="stage" environment="environment-demo">
+		<a-entity id="stage" environment="environment-desert">
 		</a-entity>
 
 	</a-scene>
@@ -150,47 +148,7 @@
 		</a-entity>
 	</script>
 
-	<!-- Environment for SVP demo -->
-	<script id="environment-demo" type="text/html">
-
-		<a-entity id="floor" rotation="0 -90 0" scale="2 2 2" position="0 0 13">
-			<a-entity obj-model="obj: #dune-obj;" material="src: #grid; repeat: 40 40; metalness:0.0; roughness: 1; color: hsl(60,60%,80%);"  shadow="cast: false;" scale="1.05 1 1.05"></a-entity>
-			<a-entity rotation="0 90 0" obj-model="obj: #dune-horizon-obj;" material="src: #grid; repeat: 200 200; metalness:0.0; roughness: 1;color: hsl(60,60%,80%);" shadow="cast: false;"></a-entity>
-		</a-entity>
-
-		<a-entity id="counter" text-geometry="value:0;font:#samsung;size:3;height:1" position="-4.201 1.711 -3.465" material="color:lavenderblush" rotation="0 38.78924273035673 0" shadow></a-entity>
-
-		<a-entity id="ocean" ocean="density: 20; width: 50; depth: 50; speed: 0.001" material="color: #9CE3F9; opacity: 0.75; metalness: 0.2; roughness: 1" rotation="-90 0 0"></a-entity>
-		
-		<a-entity position="-18.77 10.9 -5" scale="5 5 5" text-geometry="value: Metaverse; font: #bungee; size: 0.8; bevelEnabled: true; bevelSize: 0.03; bevelThickness: 0.03; curveSegments: 5; height: 0;" material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink; fog: false;"></a-entity>
-
-		<!-- stuff injected via websockets -->
-		<a-entity class='slide-target' shadow="receive:false;" position="0 1.8 0">
-		</a-entity>
-
-		<a-entity light="type: ambient; intensity: 0.4; color: #90cef0"></a-entity>
-		<a-entity light="intensity:1;color:hsl(35, 100%, 80%);castShadow:true;" position="8 5 8.5"></a-entity>
-
-		<a-entity  position="0 15 8" light="angle:30.4;decay:1.04;distance:20.02;intensity:3.48;penumbra:0.04;type:spot;shadowBias: 0.0005; castShadow:true;">
-			<a-animation fill="forward" attribute="rotation" from="-120 0 0" to="-42 0 0" dur="6000" delay="2000"></a-animation>
-		</a-entity>
-
-		<!-- giant cube -->
-		<a-entity geometry="depth:50;height:50;width:50" rotation="45 120 45" position="-70 45 -35" material=""></a-entity>
-
-		<a-entity position="12.675 2.1 -6.52" rotation="0 -45.95121516949202 0" scale="2.723 2.723 2.723">
-			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:blue" position="0.09128193718505119 0.3353260840852976 -0.2527772892276905" geometry="primitive:box" from-quaternion="-0.04930826627427826 0.07472182546268243 -0.00029114139116865077 0.9959845676079724"></a-box>
-			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:green" position="-1.2014946938015236 0.4324681350887012 -0.03990198252008523" geometry="primitive:box" from-quaternion="-0.04132853482197379 -0.002041902654166406 0.0015321922524533643 0.9991423498330563"></a-box>
-			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:yellow" position="1.1717785923713804 0.4990881759748613 -0.07418674100245877" geometry="primitive:box" from-quaternion="-0.08713510272811283 -0.018632682355620427 0.010066042683118438 0.9959713709768455"></a-box>
-			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:crimson" position="-0.819673191608328 1.5776525718958716 -0.7288151314900163" geometry="primitive:box" from-quaternion="0.1250695328347503 0.35362157578429526 -0.17553130853256688 0.9102187389969371"></a-box>
-			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:purple" position="1.0863344274224271 1.7759088594655816 -1.4276836118449854" geometry="primitive:box" from-quaternion="0.18490361878475225 -0.8060709098389282 0.2712525686842239 0.4924250034817038"></a-box>
-			<a-box material="lineWidth: 5; wireframe: true; fog: false; color:orange" position="0.0528776170944858 2.5659173347837063 -0.10934310084876969" geometry="primitive:box" from-quaternion="0.340928361833158 0.21601586069333042 0.021954800585951638 0.9146709718570443"></a-box>
-		</a-entity>
-	</script>
-
 	<script>
-		/* Removed for SVP demo */
-		/*
 		var env = document.querySelector('[environment]');
 		env.addEventListener('init', function () {
 			env.components.environment.registerCallback('environment-desert', function () {
@@ -201,7 +159,6 @@
 				});
 			});
 		});
-		*/
 	</script>
 
 	<script src="/scripts/websockets.js"></script>
