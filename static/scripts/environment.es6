@@ -55,7 +55,7 @@ registerPositionFn('environment-demo', function (el, mode, id) {
 	el.setAttribute('position', seats[((id * 3) % seats.length)] + ' ' + seats[((id * 3) % seats.length) + 1] + ' ' + seats[((id * 3) % seats.length) + 2]);
 	if (mode === 'speaker') {
 		el.setAttribute('rotation', '0 180 0');
-		el.setAttribute('position', '5 3.5 -3.4');
+		el.setAttribute('position', '5 0 -3.4');
 	}
 });
 
