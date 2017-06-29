@@ -63,6 +63,13 @@
 </a-entity>
 </script>
 
+<script id="hello-sruk" type="text/html">
+	<a-entity position="-3 5 -1.5" scale="6 6 6">
+		<a-entity text="value: Welcome to SRUK; color: black;width: 2; align: center; wrap-count: 15;"></a-entity>
+		<a-entity geometry="primitive: plane; width: 2.2; height: 0.3;" position="0 0 -0.1" material="color: white; shader: flat;"></a-entity>
+	</a-entity>
+</script>
+
 <script id="text" type="text/html">
 <a-entity
 	text="value: Hello World; color: white;width: 2; align: center; wrap-count: 11;"
@@ -90,6 +97,15 @@
   <a-animation from="4 -40 0" to="1 35 0" dur="3200"></a-animation>
   <a-entity obj-model="obj: #ship-obj; mtl: #ship-mtl;">
       <a-animation attribute="position" from="0 3 -100" fill="backwards" to="0 0 0" dur="3200" easing="ease-out"></a-animation>
+  </a-entity>
+</a-entity>
+</script>
+
+<script id="ship2" type="text/html">
+<a-entity position="0 0 -5">
+  <a-animation from="4 -40 0" to="1 35 0" dur="3200"></a-animation>
+  <a-entity obj-model="obj: #ship-obj; mtl: #ship-mtl;">
+      <a-animation attribute="position" from="0 3 -100" fill="forwards" to="0 4 0" dur="3200" easing="ease-out"></a-animation>
   </a-entity>
 </a-entity>
 </script>
